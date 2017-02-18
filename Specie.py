@@ -20,6 +20,7 @@ class Specie:
         self.typeName = "species_name"
         self.individuals = []
         self.birthNumber = 0
+        self.startingPopulation = 0
 
     def random_initializer(self):
         self.speed = uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)

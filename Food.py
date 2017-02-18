@@ -6,7 +6,7 @@ class Food:
         self.location = location
         self.size = self.foodAmount/10
         self.alive = True
-        color = '#9A7A00'
+        self.color = '#9A7A00'
 
     def consume(self):
         self.alive = False
