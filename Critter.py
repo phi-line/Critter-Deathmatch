@@ -1,24 +1,24 @@
 import math
 
 class Critter:
-    def __init__(self, params, *args,**kwargs):
+    def __init__(self, *args,**kwargs):
         self.foodAmount = kwargs.pop('foodAmount', 1000)                      #starting health
         self.size = kwargs.pop('size',self.foodAmount/100)   #diameter in pixels
-        self.foodDecayRate = kwargs.pop('foodDecayRate',params[0])       #10 #food lost per second
-        self.divideSize = kwargs.pop('divideSize',self.size * params[1])    # having greater than this amount triggers a division
-        self.turnSpeedVector = kwargs.pop('turnSpeedVector',params[2])         #45  # amount the heading can change a second in deg / sec (45 / sec)
-        self.detectDistance = kwargs.pop('detectDistance',params[3])          #2 # number of radii beyond this radius that this can "see"
+        self.foodDecayRate = kwargs.pop('foodDecayRate', 10)       #10 #food lost per second
+        self.divideSize = kwargs.pop('divideSize',self.size * 1.5)    # having greater than this amount triggers a division
+        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 45)         #45  # amount the heading can change a second in deg / sec (45 / sec)
+        self.detectDistance = kwargs.pop('detectDistance', 2)          #2 # number of radii beyond this radius that this can "see"
         self.heading = kwargs.pop('heading',0)                            # direction of travel in degrees
-        self.location = kwargs.pop('location',[params[4][0],params[4][1]]) #[300,300] # pixel coordinates
-        self.color = kwargs.pop('color',params[5])                      #"#00FF00" # display color
-        self.name = kwargs.pop('name',params[6])                      #0 # birth id given from specie.py
-        self.speed = kwargs.pop('speed',params[7])                   #1 # number of radii per second this can travel in a straight line
+        self.location = kwargs.pop('location',[300, 300]) #[300,300] # pixel coordinates
+        self.color = kwargs.pop('color',"#00FF00")                      #"#00FF00" # display color
+        self.name = kwargs.pop('name', 0)                      #0 # birth id given from specie.py
+        self.speed = kwargs.pop('speed',1)                   #1 # number of radii per second this can travel in a straight line
         self.alive = kwargs.pop('alive',True)
-        self.typeName = kwargs.pop('typeName',params[8])                  #0 # the name of the species, is a number representing the index position in the species array, given by species.py
+        self.typeName = kwargs.pop('typeName',0)                  #0 # the name of the species, is a number representing the index position in the species array, given by species.py
         self.touching = kwargs.pop('touching',False)                       # touching another object.
         self.needs_update = kwargs.pop('needs_update',False)                   # needs to be updated because its to old, to big, in combat
         self.whoTouching = kwargs.pop('whoTouching',[])                       # a 2 element list of the species id and individual id of whomever this is touching
-        self.gen = kwargs.pop('gen',params[9])                        #0 # what generation this is
+        self.gen = kwargs.pop('gen',0)                        #0 # what generation this is
 
     def decide_action(self, species, foods):
         '''
