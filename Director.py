@@ -9,7 +9,7 @@ from Critter import Critter
 from Food import Food
 
 NUM_SPECIES = 2
-STARTING_POPULATION = 100
+STARTING_POPULATION = 10
 FRAME_TIME = 0.05
 WORLD_X_SIZE = 1200
 WORLD_Y_SIZE = 600
