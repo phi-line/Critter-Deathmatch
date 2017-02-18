@@ -1,26 +1,19 @@
-import math
-
 class Critter:
-    def __init__(self, *args,**kwargs):
+    def __init__(self, location, *args,**kwargs):
+        self.size = 1
         self.foodAmount
-        self.foodDecayRate
-        self.size
-        self.divideSize
-        self.turnSpeedVector
-        self.detectDistance
-        self.heading = 0
-        self.location = [0,0]
-        self.color
-        self.name
+        self.foodDecayRate = .01
+        self.divideSize = 1.5 * self.size # 1.5 * start size
+        self.turnSpeedVector = 45  # deg / sec (45 / sec)
+        self.detectDistance = self.size + (2 * self.size)
+        self.directionVector = [0, 0]
+        self.location = location
+        self.color = self.color = "#00FF00"
+        self.name = "default_name"
         self.speed = 1
         self.alive = True
-        self.typeName
+        self.typeName = "critter"
         self.touching = False
         self.needs_update = False
-        self.whoTouching
+        self.whoTouching = []
         self.gen = 0
-
-    def move(self, frameTime):
-        theta = (self.heading * 2 * math.pi) / 360
-        self.location[0] = (self.speed*frameTime)*math.cos(theta) + self.location[0]
-        self.location[1] = (self.speed*frameTime)*math.sin(theta) + self.location[1]
