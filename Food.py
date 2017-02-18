@@ -4,7 +4,7 @@ class Food:
         self.foodAmount = strength
         self.name = name
         self.location = location
-        self.size = self.foodAmount/10
+        self.size = self.foodAmount/20
         self.alive = True
         self.color = '#9A7A00'
 

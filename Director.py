@@ -1,7 +1,7 @@
 import math
 import time
 import tkinter as tk
-from random import randint
+from random import randint, seed
 
 from GUI import GUI
 from Specie import Specie
@@ -17,6 +17,8 @@ FOOD_DENSITY = 0.0001
 FOOD_STRENGTH = 100
 
 def main():
+    seed()
+
     gui = GUI(tk.Tk(),WORLD_X_SIZE,WORLD_Y_SIZE)
     species = []
     foods = create_foods()
@@ -28,10 +30,9 @@ def main():
     main_loop(gui,species,foods)
 
 def create_foods():
-    numFood = WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY
+    numFood = int(WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY)
     foods = []
-    for i in (0,numFood):
-
+    for i in range(0,numFood):
         x = randint(0,WORLD_X_SIZE)
         y = randint(0,WORLD_Y_SIZE)
         newFood = Food(FOOD_STRENGTH,i,[x,y])

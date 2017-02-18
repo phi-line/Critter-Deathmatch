@@ -41,7 +41,8 @@ class Specie:
         :return: void
         '''
         for i in range(0, self.startingPopulation):
-            this_critter = Critter(location=[300,300])
+            this_critter = Critter(location=[300+i*300,300+i*300])
+            print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
 
     #class variable that builds population

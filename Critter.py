@@ -9,7 +9,7 @@ class Critter:
         self.turnSpeedVector = 45  # amount the heading can change a second in deg / sec (45 / sec)
         self.detectDistance = 2 # number of radii beyond this radius that this can "see"
         self.heading = 0 # direction of travel in degrees
-        self.location = [50,50] # pixel coordinates
+        self.location = [300,300] # pixel coordinates
         self.color = self.color = "#00FF00" # display color
         self.name = 0 # birth id given from specie.py
         self.speed = 1 # number of radii per second this can travel in a straight line
