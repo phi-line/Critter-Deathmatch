@@ -32,11 +32,11 @@ def create_foods():
     print(numFood)
     foods = []
     for i in (0,numFood):
-        
+
         x = randint(0,WORLD_X_SIZE)
         y = randint(0,WORLD_Y_SIZE)
         newFood = Food(FOOD_STRENGTH,i,[x,y])
-        foods.append(newFood)
+        #foods.append(newFood)
     return foods
 
 def main_loop(gui,species,foods):

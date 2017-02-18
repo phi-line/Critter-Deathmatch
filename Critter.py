@@ -17,6 +17,7 @@ class Critter:
         self.needs_update = False
         self.whoTouching = []
         self.gen = 0
+        print(location[0],location[1])
 
     def move(self, newLocation):
         '''

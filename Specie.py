@@ -1,4 +1,4 @@
-from random import *
+from random import randint, uniform, random
 from Critter import Critter
 
 class Specie:
@@ -21,6 +21,7 @@ class Specie:
         self.individuals = []
         self.birthNumber = 0
         self.startingPopulation = 0
+        self.random_initializer()
 
     def random_initializer(self):
         self.speed = uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
@@ -29,8 +30,8 @@ class Specie:
         self.divideSize = 1.5 * self.startSize
         self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
-        r = lambda: random.randint(0, 255)
-        self.color = '#%02X%02X%02X' % (r(),r(),r())
+        # r = lambda: random.randint(0, 255)
+        self.color = "#000000" # '#%02X%02X%02X' % (r(),r(),r())
         self.build_pop()
 
     #fucntion that builds a list
@@ -39,7 +40,7 @@ class Specie:
         this function fills the member population with a seed gen of x Critters
         :return: void
         '''
-        for i in range(0, self.individuals):
+        for i in range(0, self.startingPopulation):
             this_critter = Critter()
             self.individuals[0] = this_critter
 
