@@ -42,7 +42,7 @@ class Specie:
         '''
         for i in range(0, self.startingPopulation):
             this_critter = Critter()
-            self.individuals[0] = this_critter
+            self.individuals.append(this_critter)
 
     #class variable that builds population
     #birth new members based on div size
