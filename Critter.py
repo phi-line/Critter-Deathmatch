@@ -3,10 +3,9 @@ import math
 class Critter:
     def __init__(self, params, *args,**kwargs):
         self.foodAmount = 1000                      #starting health
-        self.size = self.foodAmount/100             #diameter in pixels
-        self.foodDecayRate = params[0]              #10 #food lost per second
-        self.divideSize = self.size * params[1]     # having greater than this amount triggers a division
-        self.turnSpeedVector = params[2]            #45  # amount the heading can change a second in deg / sec (45 / sec)
+        self.size = self.foodAmount/params[0]             #diameter in pixels
+        self.foodDecayRate = params[1]              #10 #food lost per second
+        self.divideSize = self.size * params[2]     # having greater than this amount triggers a division
         self.detectDistance = params[3]             #2 # number of radii beyond this radius that this can "see"
         self.heading = 0                            # direction of travel in degrees
         self.location = [params[4][0],params[4][1]] #[300,300] # pixel coordinates
