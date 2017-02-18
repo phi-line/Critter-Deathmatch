@@ -1,5 +1,5 @@
 from random import *
-from Critter import *
+from Critter import Critter
 
 class Specie:
     SPEED_MIN, SPEED_MAX = 0.1, 1.0
