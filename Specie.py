@@ -43,7 +43,7 @@ class Specie:
             self.individuals[0] = this_critter
 
     #class variable that builds population
-    birth new members based on div size
+    #birth new members based on div size
     def determine_birth(self):
         for i in self.individuals:
             pass
