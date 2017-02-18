@@ -9,18 +9,18 @@ class Specie:
     DETECT_MIN, DETECT_MAX = 1, 5
 
     def __init__(self, *args, **kwargs):
-        self.speed  = 1 # starts as 1 (size per second)
-        self.startSize = 1 # starting food
-        self.foodDecayRate = .01 # .01 speed
-        self.divideSize = 1.5 * self.startSize # 1.5 * start size
-        self.turnSpeedVector = 45 # deg / sec (45 / sec)
-        self.detectDistance = 2
-        self.directionVector = [0,0]
-        self.color = "#FF0000"
-        self.typeName = "species_name"
-        self.individuals = []
-        self.birthNumber = 0
-        self.startingPopulation=2
+        self.speed  = kwargs.pop('speed', 1) # starts as 1 (size per second)
+        self.startSize = kwargs.pop('startSize', 1) # starting food
+        self.foodDecayRate = kwargs.pop('foodDecayRate', .01) # .01 speed
+        self.divideSize = kwargs.pop('divideSize', 1.5 * self.startSize) # 1.5 * start size
+        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 45) # deg / sec (45 / sec)
+        self.detectDistance = kwargs.pop('detectDistance', 2)
+        self.directionVector = kwargs.pop('directionVector', [0,0])
+        self.color = kwargs.pop('color', "#FF0000")
+        self.typeName = kwargs.pop('typeName', "species_name")
+        self.individuals = kwargs.pop('individuals', [])
+        self.birthNumber = kwargs.pop('birthNumber', 0)
+        self.startingPopulation = kwargs.pop('startingPopulation', 2)
         self.random_initializer()
 
     def random_initializer(self):
