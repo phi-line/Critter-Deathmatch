@@ -1,24 +1,24 @@
 import math
 
 class Critter:
-    def __init__(self, *args,**kwargs):
-        self.foodAmount = 1000 #starting health
-        self.size = self.foodAmount/100 #diameter in pixels
-        self.foodDecayRate = 10 #food lost per second
-        self.divideSize = 1.5 * self.size # having greater than this amount triggers a division
-        self.turnSpeedVector = 45  # amount the heading can change a second in deg / sec (45 / sec)
-        self.detectDistance = 2 # number of radii beyond this radius that this can "see"
-        self.heading = 0 # direction of travel in degrees
-        self.location = [300,300] # pixel coordinates
-        self.color = self.color = "#00FF00" # display color
-        self.name = 0 # birth id given from specie.py
-        self.speed = 1 # number of radii per second this can travel in a straight line
+    def __init__(self, params, *args,**kwargs):
+        self.foodAmount = 1000                      #starting health
+        self.size = self.foodAmount/100             #diameter in pixels
+        self.foodDecayRate = params[0]              #10 #food lost per second
+        self.divideSize = self.size * params[1]     # having greater than this amount triggers a division
+        self.turnSpeedVector = params[2]            #45  # amount the heading can change a second in deg / sec (45 / sec)
+        self.detectDistance = params[3]             #2 # number of radii beyond this radius that this can "see"
+        self.heading = 0                            # direction of travel in degrees
+        self.location = [params[4][0],params[4][1]] #[300,300] # pixel coordinates
+        self.color = params[5]                      #"#00FF00" # display color
+        self.name = params[6]                       #0 # birth id given from specie.py
+        self.speed = params[7]                      #1 # number of radii per second this can travel in a straight line
         self.alive = True
-        self.typeName = "critter" # the name of the species, is a number representing the index position in the species array, given by species.py
-        self.touching = False # touching another object.
-        self.needs_update = False # needs to be updated because its to old, to big, in combat
-        self.whoTouching = [] # a 2 element list of the species id and individual id of whomever this is touching
-        self.gen = 0 # what generation this is
+        self.typeName = params[8]                   #0 # the name of the species, is a number representing the index position in the species array, given by species.py
+        self.touching = False                       # touching another object.
+        self.needs_update = False                   # needs to be updated because its to old, to big, in combat
+        self.whoTouching = []                       # a 2 element list of the species id and individual id of whomever this is touching
+        self.gen = params[9]                        #0 # what generation this is
 
     def move(self, frameTime):
         '''
@@ -30,7 +30,7 @@ class Critter:
         self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
         self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
 
-    def decide_action(self, speciesLst, foodLst):
+    def decide_action(self, species, foods):
         '''
         decide action based on knowledge of species and food
         :param speciesLst: list of species
