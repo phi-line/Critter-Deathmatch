@@ -7,7 +7,6 @@ class Specie:
     FOOD_MIN, FOOD_MAX = 0.1, 1
     TURN_SPEED_MIN, TURN_SPEED_MAX = 30, 45
     DETECT_MIN, DETECT_MAX = 1, 5
-    MIN_INDIVIDUALS, MAX_INDIVIDUALS = 5, 10
 
     def __init__(self, *args, **kwargs):
         self.speed  = 1 # starts as 1 (size per second)
@@ -19,9 +18,8 @@ class Specie:
         self.directionVector = [0,0]
         self.color = "#FF0000"
         self.typeName = "species_name"
-        self.individuals = 10
+        self.individuals = []
         self.birthNumber = 0
-        population = []
 
     def random_initializer(self):
         self.speed = uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
@@ -32,7 +30,7 @@ class Specie:
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
         r = lambda: random.randint(0, 255)
         self.color = '#%02X%02X%02X' % (r(),r(),r())
-        self.individuals = uniform(Specie.MIN_INDIVIDUALS, Specie.MIN_INDIVIDUALS)
+        self.build_pop()
 
     #fucntion that builds a list
     def build_pop(self):
@@ -42,10 +40,14 @@ class Specie:
         '''
         for i in range(0, self.individuals):
             this_critter = Critter()
-            self.population[0] = this_critter
+            self.individuals[0] = this_critter
 
     #class variable that builds population
-    #birth new members based on div size
+    birth new members based on div size
     def determine_birth(self):
-        for
+        for i in self.individuals:
+            pass
     #remove dead members
+
+    def decide_fate(self):
+        pass
