@@ -11,7 +11,7 @@ from Food import Food
 NUM_SPECIES = 2
 STARTING_POPULATION = 100
 FRAME_TIME = 0.05
-WORLD_X_SIZE = 600
+WORLD_X_SIZE = 1200
 WORLD_Y_SIZE = 600
 FOOD_DENSITY = 0.0001
 FOOD_STRENGTH = 100
@@ -29,7 +29,6 @@ def main():
 
 def create_foods():
     numFood = WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY
-    print(numFood)
     foods = []
     for i in (0,numFood):
 
