@@ -1,6 +1,7 @@
 import math
 import time
 import tkinter as tk
+from random import randint
 
 from GUI import GUI
 from Specie import Specie
@@ -12,25 +13,37 @@ STARTING_POPULATION = 100
 FRAME_TIME = 0.05
 WORLD_X_SIZE = 600
 WORLD_Y_SIZE = 600
-
+FOOD_DENSITY = 1
+FOOD_STRENGTH = 100
 
 def main():
     gui = GUI(tk.Tk(),WORLD_X_SIZE,WORLD_Y_SIZE)
     species = []
+    foods = create_foods()
 
     for newSpecie in (0,NUM_SPECIES):
         newSpecie = Specie(STARTING_POPULATION)
         species.append(newSpecie)
 
-    main_loop(gui,species)
+    main_loop(gui,species,foods)
 
-def main_loop(gui,species):
+def create_foods():
+    numFood = WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY
+    foods = []
+    for i in (0,numFood):
+        x = randint(0,WORLD_X_SIZE)
+        y = randint(0,WORLD_Y_SIZE)
+        newFood = Food(FOOD_STRENGTH,i,[x,y])
+        foods.append(newFood)
+    return foods
+
+def main_loop(gui,species,foods):
     while True:
-        logic(species)
-        draw(gui,species)
+        logic(species,foods)
+        draw(gui,species,foods)
         time.sleep(FRAME_TIME)
 
-def logic(species):
+def logic(species, foods):
     individualsToUpdate = []
 
     for specie in species:
@@ -46,7 +59,9 @@ def logic(species):
         if individual.alive:
             individual.update()
 
-def draw(gui, species):
+def draw(gui, species, foods):
+    for food in foods:
+        gui.add_object_to_draw(food)
     for specie in species:
         for individual in specie:
             gui.add_object_to_draw(individual)
