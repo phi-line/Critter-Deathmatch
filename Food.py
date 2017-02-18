@@ -1,6 +1,6 @@
 class Food:
 
-    def __init__(self,name,location,*args,**kvargs):
+    def __init__(self,name,location,*args,**kwargs):
         self.foodAmount = 100
         self.name = name
         self.location = location
