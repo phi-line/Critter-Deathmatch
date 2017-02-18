@@ -2,24 +2,23 @@ import math
 
 class Critter:
     def __init__(self, *args,**kwargs):
-        self.foodAmount = 1000
-        self.size = self.foodAmount/100
-        self.foodDecayRate = 10
-        self.divideSize = 1.5 * self.size # 1.5 * start size
-        self.turnSpeedVector = 45  # deg / sec (45 / sec)
-        self.detectDistance = self.size + (2 * self.size)
-        self.heading = 0
-        self.location = [50,50]
-        self.color = self.color = "#00FF00"
-        self.name = "default_name"
-        self.speed = 1
+        self.foodAmount = 1000 #starting health
+        self.size = self.foodAmount/100 #diameter in pixels
+        self.foodDecayRate = 10 #food lost per second
+        self.divideSize = 1.5 * self.size # having greater than this amount triggers a division
+        self.turnSpeedVector = 45  # amount the heading can change a second in deg / sec (45 / sec)
+        self.detectDistance = 2 # number of radii beyond this radius that this can "see"
+        self.heading = 0 # direction of travel in degrees
+        self.location = [50,50] # pixel coordinates
+        self.color = self.color = "#00FF00" # display color
+        self.name = 0 # birth id given from specie.py
+        self.speed = 1 # number of radii per second this can travel in a straight line
         self.alive = True
-        self.typeName = "critter"
-        self.touching = False
-        self.needs_update = False
-        self.whoTouching = []
-        self.gen = 0
-        print(self.location[0],self.location[1])
+        self.typeName = "critter" # the name of the species, is a number representing the index position in the species array, given by species.py
+        self.touching = False # touching another object.
+        self.needs_update = False # needs to be updated because its to old, to big, in combat
+        self.whoTouching = [] # a 2 element list of the species id and individual id of whomever this is touching
+        self.gen = 0 # what generation this is
 
     def move(self, frameTime):
         '''
@@ -39,7 +38,6 @@ class Critter:
         :return: none
         '''
         self.heading = 0 # to the left for demo
-        pass
 
     @staticmethod
     def is_collided(fLocationLst, sLocationLst, fRadiusFlt, sRadiusFlt):
@@ -57,6 +55,16 @@ class Critter:
         return (xCal + yCal) <= rCal
 
     def check_state(self,species,foods):
+        '''
+        checks if this individual is in collision with another individual or food
+        occurs after the move function
+        may set touching to true
+            get id of person im touching
+        sets need_update to true
+        :param species:
+        :param foods:
+        :return:
+        '''
         pass
 
     def update(self, speciesLst, foodLst):
