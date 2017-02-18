@@ -1,13 +1,15 @@
+import math
+
 class Critter:
-    def __init__(self, location, *args,**kwargs):
-        self.size = 1
-        self.foodAmount
-        self.foodDecayRate = .01
+    def __init__(self, *args,**kwargs):
+        self.foodAmount = 1000
+        self.size = self.foodAmount/100
+        self.foodDecayRate = 10
         self.divideSize = 1.5 * self.size # 1.5 * start size
         self.turnSpeedVector = 45  # deg / sec (45 / sec)
         self.detectDistance = self.size + (2 * self.size)
-        self.directionVector = [0, 0]
-        self.location = location
+        self.heading = 0
+        self.location = [50,50]
         self.color = self.color = "#00FF00"
         self.name = "default_name"
         self.speed = 1
@@ -17,16 +19,17 @@ class Critter:
         self.needs_update = False
         self.whoTouching = []
         self.gen = 0
-        print(location[0],location[1])
+        print(self.location[0],self.location[1])
 
-    def move(self, newLocation):
+    def move(self, frameTime):
         '''
         replace current location with new one
         :param newLocation: list of x,y
         :return: none
         '''
-        self.location[0] = newLocation[0]
-        self.location[1] = newLocation[1]
+        theta = ((self.heading) * 2 * math.pi) / 360
+        self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
+        self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
 
     def decide_action(self, speciesLst, foodLst):
         '''
@@ -35,7 +38,7 @@ class Critter:
         :param foodLst: list of food
         :return: none
         '''
-        self.directionVector = 180 # to the left for demo
+        self.heading = 0 # to the left for demo
         pass
 
     @staticmethod
@@ -53,7 +56,7 @@ class Critter:
         rCal = ( fRadiusFlt + sRadiusFlt ) ** 2
         return (xCal + yCal) <= rCal
 
-    def check_state(self):
+    def check_state(self,species,foods):
         pass
 
     def update(self, speciesLst, foodLst):

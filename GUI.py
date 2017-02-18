@@ -22,3 +22,6 @@ class GUI(tk.Canvas):
     def draw(self):
         tk.Canvas.update_idletasks(self)
         tk.Canvas.update(self)
+
+    def clear(self):
+        tk.Canvas.delete(self,"all")

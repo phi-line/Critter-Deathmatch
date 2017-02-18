@@ -35,7 +35,7 @@ def create_foods():
         x = randint(0,WORLD_X_SIZE)
         y = randint(0,WORLD_Y_SIZE)
         newFood = Food(FOOD_STRENGTH,i,[x,y])
-        #foods.append(newFood)
+        foods.append(newFood)
     return foods
 
 def main_loop(gui,species,foods):
@@ -61,6 +61,8 @@ def logic(species, foods):
             individual.update()
 
 def draw(gui, species, foods):
+    gui.clear()
+
     for food in foods:
         gui.add_object_to_draw(food)
 

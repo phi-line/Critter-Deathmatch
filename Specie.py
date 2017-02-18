@@ -20,7 +20,7 @@ class Specie:
         self.typeName = "species_name"
         self.individuals = []
         self.birthNumber = 0
-        self.startingPopulation = 0
+        self.startingPopulation=2
         self.random_initializer()
 
     def random_initializer(self):
@@ -41,7 +41,7 @@ class Specie:
         :return: void
         '''
         for i in range(0, self.startingPopulation):
-            this_critter = Critter()
+            this_critter = Critter(location=[300,300])
             self.individuals.append(this_critter)
 
     #class variable that builds population
