@@ -20,6 +20,15 @@ class Critter:
         self.whoTouching = []                       # a 2 element list of the species id and individual id of whomever this is touching
         self.gen = params[9]                        #0 # what generation this is
 
+    def decide_action(self, species, foods):
+        '''
+        decide action based on knowledge of species and food
+        :param speciesLst: list of species
+        :param foodLst: list of food
+        :return: none
+        '''
+        self.heading = 0 # to the left for demo
+
     def move(self, frameTime):
         '''
         replace current location with new one
@@ -29,15 +38,6 @@ class Critter:
         theta = ((self.heading) * 2 * math.pi) / 360
         self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
         self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
-
-    def decide_action(self, species, foods):
-        '''
-        decide action based on knowledge of species and food
-        :param speciesLst: list of species
-        :param foodLst: list of food
-        :return: none
-        '''
-        self.heading = 0 # to the left for demo
 
     @staticmethod
     def is_collided(fLocationLst, sLocationLst, fRadiusFlt, sRadiusFlt):
