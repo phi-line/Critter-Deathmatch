@@ -49,9 +49,9 @@ def logic(species, foods):
     for specie in species:
         for individual in specie.individuals:
             if individual.alive:
-                individual.decide_action(species)
+                individual.decide_action(species,foods)
                 individual.move(FRAME_TIME)
-                individual.check_state()
+                individual.check_state(species,foods)
                 if individual.needs_update:
                     individualsToUpdate.append(individual)
 
@@ -62,9 +62,11 @@ def logic(species, foods):
 def draw(gui, species, foods):
     for food in foods:
         gui.add_object_to_draw(food)
+
     for specie in species:
         for individual in specie:
             gui.add_object_to_draw(individual)
+
     gui.draw()
 
 main()
