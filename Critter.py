@@ -27,7 +27,8 @@ class Critter:
         :param foodLst: list of food
         :return: none
         '''
-        self.heading = 0 # to the left for demo
+        # self.heading = 0 # to the left for demo
+        pass
 
     def move(self, frameTime):
         '''

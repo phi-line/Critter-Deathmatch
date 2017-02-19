@@ -1,5 +1,6 @@
 from random import randint, uniform, random, randrange
 from Critter import Critter
+from math import *
 
 class Specie:
     SPEED_MIN, SPEED_MAX = 0.1, 1.0
@@ -30,9 +31,14 @@ class Specie:
         self.divideSize = 1.5 * self.startSize
         self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
+        self.directionVector = Specie.angle_to_vector(uniform(0,360))
         # r = lambda: random.randint(0, 255)
         self.color = "#000000" # '#%02X%02X%02X' % (r(),r(),r())
         self.build_pop()
+
+    @staticmethod
+    def angle_to_vector(angle):
+        return [int(cos(pi)),-int(sin(pi))]
 
     #fucntion that builds a list
     def build_pop(self):
@@ -41,8 +47,10 @@ class Specie:
         :return: void
         '''
         for i in range(0, self.startingPopulation):
-            this_critter = Critter(location=[300+i*300,300+i*300])
-            print(this_critter.location[0],'\t',this_critter.location[1])
+            this_critter = Critter( location=[randint(0,1200),randint(0,600)],
+                                   heading=(randint(0,360)) )
+            #print(this_critter.location[0],'\t',this_critter.location[1])
+            print(this_critter.heading)
             self.individuals.append(this_critter)
 
     #class variable that builds population
