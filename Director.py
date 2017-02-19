@@ -71,11 +71,15 @@ def draw(gui, species, foods):
         if(food.alive):
             gui.add_object_to_draw(food)
 
-    for specie in species:
-        for individual in specie.individuals:
+    countlist = []
+    for i in range(0,len(species)):
+        countlist.append(0)
+        for individual in species[i].individuals:
             if(individual.alive):
+                countlist[i]+=1
                 gui.add_object_to_draw(individual)
 
+    gui.add_text_to_origin("A:%i    vs    B:%i" % (countlist[0],countlist[1]))
     gui.draw()
 
 main()
