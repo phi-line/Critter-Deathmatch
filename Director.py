@@ -8,8 +8,8 @@ from Specie import Specie
 from Critter import Critter
 from Food import Food
 
-NUM_SPECIES = 1
-STARTING_POPULATION = 10
+NUM_SPECIES = 2
+STARTING_POPULATION = 20
 FRAME_TIME = 0.05
 WORLD_X_SIZE = 1200
 WORLD_Y_SIZE = 600
@@ -23,8 +23,9 @@ def main():
     species = []
     foods = create_foods()
 
-    for newSpecie in (0,NUM_SPECIES):
-        newSpecie = Specie(startingPopulation=STARTING_POPULATION)
+    for i in range(0,NUM_SPECIES):
+        newSpecie = Specie(startingPopulation=STARTING_POPULATION,
+                           typeName="species" + str(i))
         species.append(newSpecie)
 
     main_loop(gui,species,foods)
@@ -49,6 +50,7 @@ def logic(species, foods):
 
     #individualsToUpdate = []
     for specie in species:
+        specie.determine_birth()
         for individual in specie.individuals:
             if individual.alive:
                 individual.decide_action(species,foods)
@@ -56,6 +58,7 @@ def logic(species, foods):
                 individual.check_state(species,foods)
                 #if individual.needs_update:
                 #   individualsToUpdate.append(individual)
+
     for specie in species:
         for individual in specie.individuals:
             if individual.alive:
