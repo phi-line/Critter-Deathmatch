@@ -1,4 +1,4 @@
-from random import randint, uniform, random, randrange
+from random import randint, uniform, random, randrange, choice
 from Critter import Critter
 from math import *
 
@@ -32,13 +32,17 @@ class Specie:
         self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
         self.directionVector = Specie.angle_to_vector(uniform(0,360))
-        # r = lambda: random.randint(0, 255)
-        self.color = "#000000" # '#%02X%02X%02X' % (r(),r(),r())
+        self.color = Specie.gen_hex_colour_code()
         self.build_pop()
 
     @staticmethod
     def angle_to_vector(angle):
         return [int(cos(pi)),-int(sin(pi))]
+
+    @staticmethod
+    def gen_hex_colour_code():
+        return "#" + ''.join([choice('0123456789ABCDEF') for x in range(6)])
+        #+ str(hex(randint(0, 16777215))[2:].upper())
 
     #fucntion that builds a list
     def build_pop(self):
@@ -48,7 +52,9 @@ class Specie:
         '''
         for i in range(0, self.startingPopulation):
             this_critter = Critter( location=[randint(0,1200),randint(0,600)],
-                                   heading=(randint(0,360)) )
+                                   heading=(randint(0,360)), size=randint(1 ,20),
+                                    typeName=self.typeName,
+                                    color=self.color)
             #print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
 
@@ -63,20 +69,23 @@ class Specie:
         '''
         for i in self.individuals:
             if i.size > i.divideSize:
-                dir = randrange(0, 360)
+                dir = 0#randrange(0, 180)
                 childA = Critter(foodAmount=(i.foodAmount/2),
                                  size=(i.size/2),
                                  location=i.location,
-                                 heading=dir)
-                muDir = 180 + dir
-                if(muDir >= 360):
-                    muDir -= 360
-                elif(muDir < 0):
-                    muDir += 360
+                                 heading=dir,
+                                 color=i.color,
+                                 speed=i.speed,
+                                 typeName=self.typeName)
+                muDir = 180#randrange(180, 360)
                 childB = Critter(foodAmount=(i.foodAmount/2),
                                  size=(i.size/2),
                                  location=i.location,
-                                 heading=muDir)
+                                 heading=muDir,
+                                 color=i.color,
+                                 speed=i.speed,
+                                 typeName=self.typeName)
+                i.alive = False
                 self.individuals.remove(i)
                 self.individuals.append(childA)
                 self.individuals.append(childB)

@@ -79,7 +79,9 @@ class Critter:
             for individual in species.individuals:
                 # check if collided with target
                 if( Critter.is_collided(self.location, individual.location,
-                                        self.size, individual.size) ):
+                                        self.size, individual.size) and
+                    self.typeName != individual.typeName and
+                    self.alive and individual.alive):
                     if(self.size > individual.size):
                         individual.alive = False # eating target
                         self.size += individual.size
@@ -94,8 +96,10 @@ class Critter:
             # check if collided with food
             if( Critter.is_collided(self.location, food.location,
                                     self.size, food.size) and
-                food.alive == True):
+                food.alive):
                 #print("Hit food")
                 self.needs_update = True
                 self.foodAmount += food.consume()
+
+        self.speed = 20 / self.size
 
