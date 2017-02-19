@@ -20,7 +20,7 @@ class GUI(tk.Canvas):
         self.create_circle(object.location[0],object.location[1],object.size,object.color,outline='#000000',width=2)
 
     def add_text_to_origin(self,string):
-        self.create_text(self.win_x/2, self.win_y - 15, font=("Ariel", 24), fill='black', text=string)
+        self.create_text(self.win_x/2, self.win_y - 15, font=("Impact", 36), fill='black' ,text=string)
 
     def draw(self):
         tk.Canvas.update_idletasks(self)
