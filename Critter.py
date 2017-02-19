@@ -71,13 +71,15 @@ class Critter:
 
         for value in shifts:
             shiftSum += value
-        shift = self.turnSpeedVector * shiftSum / (len(shifts)*2)
+        shift = int(self.turnSpeedVector * shiftSum / (len(shifts)*2))
+        shift = shift % 360
         #print(shift)
+        '''
         if (shift > self.turnSpeedVector):
             shift = self.turnSpeedVector
         if (shift < -1*self.turnSpeedVector):
             shift = -1*self.turnSpeedVector
-
+        '''
         # edge detection
         print(self.heading,'\t',shift)
         self.heading = self.heading + shift
