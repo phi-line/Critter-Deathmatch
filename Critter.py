@@ -112,11 +112,11 @@ class Critter:
                     self.alive and individual.alive):
                     if(self.size > individual.size):
                         individual.alive = False # eating target
-                        self.size += individual.size
+                        self.size += int(math.sqrt((4/3)*math.pi*(individual.size)))
                         self.foodAmount += individual.foodAmount
                     elif(self.size < individual.size):
                         self.alive = False # being ate by target
-                        individual.size += self.size
+                        individual.size += int(((4/3)*math.pi*(self.size))**(1./3.))
                         individual.foodAmount += self.foodAmount
                     else:
                         pass
@@ -128,6 +128,7 @@ class Critter:
                 #print("Hit food")
                 self.needs_update = True
                 self.foodAmount += food.consume()
+                self.size += int((4/3)*math.pi*(food.size)**(1./3.))
 
-        self.speed = 25 / self.size
+        self.speed = 100 / self.size
 
