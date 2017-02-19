@@ -47,29 +47,31 @@ def main_loop(gui,species,foods):
 
 def logic(species, foods):
 
-    individualsToUpdate = []
+    #individualsToUpdate = []
     for specie in species:
         for individual in specie.individuals:
             if individual.alive:
                 individual.decide_action(species,foods)
                 individual.move(FRAME_TIME)
                 individual.check_state(species,foods)
-                if individual.needs_update:
-                    individualsToUpdate.append(individual)
-
-    for individual in individualsToUpdate:
-        if individual.alive:
-            individual.update(speciesLst=species, foodLst=foods)
+                #if individual.needs_update:
+                #   individualsToUpdate.append(individual)
+    for specie in species:
+        for individual in specie.individuals:
+            if individual.alive:
+                individual.update(speciesLst=species, foodLst=foods)
 
 def draw(gui, species, foods):
     gui.clear()
 
     for food in foods:
-        gui.add_object_to_draw(food)
+        if(food.alive):
+            gui.add_object_to_draw(food)
 
     for specie in species:
         for individual in specie.individuals:
-            gui.add_object_to_draw(individual)
+            if(individual.alive):
+                gui.add_object_to_draw(individual)
 
     gui.draw()
 

@@ -50,7 +50,6 @@ class Specie:
             this_critter = Critter( location=[randint(0,1200),randint(0,600)],
                                    heading=(randint(0,360)) )
             #print(this_critter.location[0],'\t',this_critter.location[1])
-            print(this_critter.heading)
             self.individuals.append(this_critter)
 
     #class variable that builds population
