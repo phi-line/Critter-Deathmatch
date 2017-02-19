@@ -67,6 +67,8 @@ class Specie:
         based on the div size. recalculates food
         :return: void
         '''
+        pass
+        '''
         for i in self.individuals:
             if i.size > i.divideSize:
                 dir = 0#randrange(0, 180)
@@ -89,7 +91,7 @@ class Specie:
                 self.individuals.remove(i)
                 self.individuals.append(childA)
                 self.individuals.append(childB)
-
+        '''
     #remove dead members
     def decide_fate(self):
         '''

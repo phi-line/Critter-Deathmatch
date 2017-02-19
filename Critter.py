@@ -1,4 +1,5 @@
 import math
+import random
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -30,15 +31,42 @@ class Critter:
         # self.heading = 0 # to the left for demo
         pass
 
+    # def move(self, frameTime):
+    #     theta = ((self.heading) * 2 * math.pi) / 360
+    #     self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
+    #     self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
+
+
     def move(self, frameTime):
-        '''
-        replace current location with new one
-        :param newLocation: list of x,y
-        :return: none
-        '''
-        theta = ((self.heading) * 2 * math.pi) / 360
+        if self.location[0] + self.size> 1200:
+            # perform vector reflection from vector2.right
+            self.heading = random.randint(110,150)#self.vector_reflect([-1, 0])
+        elif self.location[0] - self.size< 0:
+            # perform vector reflection from vector2.left
+            self.heading = random.randint(0,20) #self.vector_reflect([1, 0])
+        if self.location[1] + self.size > 600:
+            # perform vector reflection from vector2.down
+            self.heading = random.randint(20,160) #self.vector_reflect([0, -1])
+        elif self.location[1] - self.size < 0:
+            # perform vector reflection from vector2.up
+            self.heading = random.randint(200,340) #self.vector_reflect([0, 1])
+
+        correctTheta = self.heading % 360
+        theta = (correctTheta * 2 * math.pi) / 360
+
         self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
         self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
+
+
+    # [1,−1]−2×(−1)×[0,1]=[1,−1]+2×[0,1]=[1,−1]+[0,2]
+    def vector_reflect(self, normal):
+        def mult(vectorA, vectorB):
+            #return [(x, y) for x in vectorA for y in vectorB]
+            return
+
+        dir = self.heading
+        rhs = 2 * (mult(mult(dir, normal), normal))
+        return [dir[0] - rhs[0], dir[1] - rhs[1]]
 
     @staticmethod
     def is_collided(fLocationLst, sLocationLst, fRadiusFlt, sRadiusFlt):
@@ -101,5 +129,5 @@ class Critter:
                 self.needs_update = True
                 self.foodAmount += food.consume()
 
-        self.speed = 20 / self.size
+        self.speed = 25 / self.size
 
