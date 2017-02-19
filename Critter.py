@@ -1,4 +1,5 @@
 import math
+from random import randint
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -28,7 +29,121 @@ class Critter:
         :return: none
         '''
         # self.heading = 0 # to the left for demo
-        pass
+        shifts = []
+        shiftSum = 0
+
+        theta_1 = 0.0
+        imperative_1 = 0
+        scaleFactor = 0
+
+        for specie in species:
+            for individual in specie.individuals:
+                if (individual.alive):
+                    theta_1 = 0.0
+                    imperative_1 = 0
+                    scaleFactor = self.scale(individual)
+
+                    if (individual.typeName == self.typeName):
+                        theta_1 = self.case_4(individual)
+                        imperative_1 = 2
+                    elif(individual.typeName != self.typeName):
+                        if(individual.size > self.size):
+                            theta_1 = self.case_1(individual)
+                            imperative_1 = 5
+                        else:
+                            theta_1 = self.case_3(individual)
+                            imperative_1 = 3
+
+                newShift = theta_1 * imperative_1 * scaleFactor
+                shifts.append(newShift)
+
+        for food in foods:
+            if (food.alive):
+                theta_2 = self.case_2(food)
+                imperative_2 = 4
+                scale_2 = 1000/(self.foodAmount*2)
+                newShift_2 = theta_2 * imperative_2 * scale_2
+                shifts.append(newShift_2)
+
+        wiggle = self.case_5()
+        shifts.append(wiggle)
+
+        for value in shifts:
+            shiftSum += value
+
+        shift = self.turnSpeedVector * shiftSum
+
+        if (shiftSum > self.turnSpeedVector):
+            shift = self.turnSpeedVector
+
+        # edge detection
+
+        self.heading += shift
+
+    def scale(self, other):
+        '''
+        dist between self and other
+        :param other:
+        :return:
+        '''
+        distSquared = (other.location[0] - self.location[0])**2 + (other.location[1] - self.location[1])**2
+        dist = math.sqrt(distSquared)
+        if (dist == 0):
+            dist = self.detectDistance
+        return (self.size + self.detectDistance) / dist
+
+    def case_1(self, other):
+        '''
+        run from bad guy
+        :param other:
+        :return:
+        '''
+        y_over_x = (other.location[1] - self.location[1]) / (other.location[0] - self.location[0])
+        targetTheta = math.tan(y_over_x)
+        theta = 180 + (targetTheta - self.heading)
+        return theta
+
+    def case_2(self, food):
+        '''
+        chase down food
+        :param food:
+        :return:
+        '''
+        y_over_x = (food.location[1] - self.location[1]) / (food.location[0] - self.location[0])
+        targetTheta = math.tan(y_over_x)
+        theta = 0 + (targetTheta - self.heading)
+        return theta
+
+    def case_3(self,other):
+        '''
+        chase down tiny bad guy
+        :param other:
+        :return:
+        '''
+        y_over_x = (other.location[1] - self.location[1]) / (other.location[0] - self.location[0])
+        targetTheta = math.tan(y_over_x)
+        theta = 0 + (targetTheta - self.heading)
+        return theta
+
+    def case_4(self, other):
+        '''
+        follow friend
+        :param other:
+        :return:
+        '''
+        theta = 0 + (other.heading - self.heading)
+
+        return theta
+
+    def case_5(self):
+        '''
+        wiggle
+        :return:
+        '''
+        theta = randint(0, 10) -  5
+        return theta
+
+    #include case 6: going out of bounds
 
     def move(self, frameTime):
         '''
@@ -36,7 +151,8 @@ class Critter:
         :param newLocation: list of x,y
         :return: none
         '''
-        theta = ((self.heading) * 2 * math.pi) / 360
+        correctTheta = self.heading % 360
+        theta = (correctTheta * 2 * math.pi) / 360
         self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
         self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
 
