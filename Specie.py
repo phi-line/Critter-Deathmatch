@@ -1,4 +1,4 @@
-from random import randint, uniform, random
+from random import randint, uniform, random, randrange
 from Critter import Critter
 
 class Specie:
@@ -47,10 +47,39 @@ class Specie:
 
     #class variable that builds population
     #birth new members based on div size
+    #food
     def determine_birth(self):
+        '''
+        determines if an individual is too big and if so it separates
+        based on the div size. recalculates food
+        :return: void
+        '''
         for i in self.individuals:
-            pass
-    #remove dead members
+            if i.size > i.divideSize:
+                dir = randrange(0, 360)
+                childA = Critter(foodAmount=(i.foodAmount/2),
+                                 size=(i.size/2),
+                                 location=i.location,
+                                 heading=dir)
+                muDir = 180 + dir
+                if(muDir >= 360):
+                    muDir -= 360
+                elif(muDir < 0):
+                    muDir += 360
+                childB = Critter(foodAmount=(i.foodAmount/2),
+                                 size=(i.size/2),
+                                 location=i.location,
+                                 heading=muDir)
+                self.individuals.remove(i)
+                self.individuals.append(childA)
+                self.individuals.append(childB)
 
+    #remove dead members
     def decide_fate(self):
-        pass
+        '''
+        Removed dead flagged members from the population
+        :return: void
+        '''
+        for i in self.inividuals:
+            if not i.alive:
+                self.individuals.remove(i)
