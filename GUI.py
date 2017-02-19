@@ -17,6 +17,7 @@ class GUI(tk.Canvas):
         return self.create_oval(x - r, y - r, x + r, y + r, fill=color, **kwargs)
 
     def add_object_to_draw(self,object):
+        #self.create_circle(object.location[0], object.location[1], object.size*6, '#cccccc', outline='#000000',width=2)
         self.create_circle(object.location[0],object.location[1],object.size,object.color,outline='#000000',width=2)
 
     def draw(self):

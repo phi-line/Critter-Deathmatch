@@ -7,13 +7,13 @@ class Critter:
         self.size = kwargs.pop('size',self.foodAmount/100)   #diameter in pixels
         self.foodDecayRate = kwargs.pop('foodDecayRate', 10)       #10 #food lost per second
         self.divideSize = kwargs.pop('divideSize',self.size * 1.5)    # having greater than this amount triggers a division
-        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 90)         #45  # amount the heading can change a second in deg / sec (45 / sec)
-        self.detectDistance = kwargs.pop('detectDistance', 3)          #2 # number of radii beyond this radius that this can "see"
+        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 10)         #45  # amount the heading can change a second in deg / sec (45 / sec)
+        self.detectDistance = kwargs.pop('detectDistance', 5)          #2 # number of radii beyond this radius that this can "see"
         self.heading = kwargs.pop('heading',0)                            # direction of travel in degrees
         self.location = kwargs.pop('location',[300, 300]) #[300,300] # pixel coordinates
         self.color = kwargs.pop('color',"#00FF00")                      #"#00FF00" # display color
         self.name = kwargs.pop('name', 0)                      #0 # birth id given from specie.py
-        self.speed = kwargs.pop('speed',2)                   #1 # number of radii per second this can travel in a straight line
+        self.speed = kwargs.pop('speed',5)                   #1 # number of radii per second this can travel in a straight line
         self.alive = kwargs.pop('alive',True)
         self.typeName = kwargs.pop('typeName',0)                  #0 # the name of the species, is a number representing the index position in the species array, given by species.py
         self.touching = kwargs.pop('touching',False)                       # touching another object.
@@ -35,10 +35,10 @@ class Critter:
         theta_1 = 0.0
         imperative_1 = 0
         scaleFactor = 0
-
+        '''
         for specie in species:
             for individual in specie.individuals:
-                if (individual.alive and self.scale(individual) <= 1):
+                if (individual.alive and (individual.name != self.name)):
                     theta_1 = 0.0
                     imperative_1 = 0
                     scaleFactor = self.scale(individual)
@@ -56,34 +56,62 @@ class Critter:
 
                 newShift = theta_1 * imperative_1 * scaleFactor
                 shifts.append(newShift)
+        '''
+
+        closest_food_index = 0
 
         for food in foods:
-            if (food.alive and self.scale(food) <= 1):
-                theta_2 = self.case_2(food)
-                imperative_2 = 4
-                scale_2 = self.scale(food) + 0#1000/(self.foodAmount*500)
-                newShift_2 = theta_2 * imperative_2 * scale_2
-                shifts.append(newShift_2)
-                break
+            if (food.alive and (self.distance(food) <= self.distance(foods[closest_food_index]))):
+                closest_food_index = food.name
+
+        #print(foods[closest_food_index].location[0],'\t',foods[closest_food_index].location[1])
+
+        foodShift = self.case_2(foods[closest_food_index])#*4#*self.scale(foods[closest_food_index])
+        shifts.append(foodShift)
+
+        '''
+        theta_2 = self.case_2(food)
+        imperative_2 = 4
+        scale_2 = self.scale(food) + 0  # 1000/(self.foodAmount*500)
+        newShift_2 = theta_2 * imperative_2 * scale_2
+        shifts.append(newShift_2)
+        '''
+
 
         wiggle = self.case_5()
-        shifts.append(wiggle)
+        #shifts.append(wiggle)
 
         for value in shifts:
             shiftSum += value
-        shift = int(self.turnSpeedVector * shiftSum / (len(shifts)*2))
-        shift = shift % 360
-        #print(shift)
-        '''
+
+        #shift = int(shiftSum / (len(shifts)*1))
+        shift = int(self.turnSpeedVector * shiftSum / (len(shifts)*1))
+
+        if (shift > 360):
+            shift = shift % 360
+        elif(shift < -360):
+            shift = -1 * (360 - (shift % 360))
+
         if (shift > self.turnSpeedVector):
             shift = self.turnSpeedVector
         if (shift < -1*self.turnSpeedVector):
             shift = -1*self.turnSpeedVector
-        '''
+        #'''
         # edge detection
-        print(self.heading,'\t',shift)
+
         self.heading = self.heading + shift
-        #print(self.heading)
+
+        if(self.heading > 360):
+            self.heading = self.heading - 360
+        if(self.heading < 0):
+            self.heading = 360 + self.heading
+
+        print("Index: ", closest_food_index,"Dist: ",int(self.distance(foods[closest_food_index])),'\tmy Heading: ',self.heading,'\tHeading shift: ',shift)#,'\t',self.case_2(foods[closest_food_index]))
+
+    def distance(self, other):
+        distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
+        dist = math.sqrt(distSquared)
+        return dist
 
     def scale(self, other):
         '''
@@ -91,8 +119,7 @@ class Critter:
         :param other:
         :return:
         '''
-        distSquared = (other.location[0] - self.location[0])**2 + (other.location[1] - self.location[1])**2
-        dist = math.sqrt(distSquared)
+        dist = self.distance(other)
         if (dist == 0):
             dist = self.detectDistance-0.01
         scale = (self.size + self.detectDistance*self.size) / dist
@@ -126,20 +153,33 @@ class Critter:
         :param food:
         :return:
         '''
-        y = (food.location[1] - self.location[1])
-        x = (food.location[0] - self.location[0])
+        y = int(food.location[1] - self.location[1])
+        x = int(food.location[0] - self.location[0])
 
-        if(x != 0):
-            y_over_x = y / x
-            targetTheta = math.tan(y_over_x)
-
-        if(y < 0):
-            targetTheta = 270
+        if(x == 0):
+            if (y < 0):
+                # print("y<0")
+                targetTheta = 270
+            else:
+                # print("y>0")
+                targetTheta = 90
         else:
-            targetTheta = 90
+            ratio = y / x
+            targetTheta = math.atan(ratio)
+            targetTheta = int((targetTheta * 180) / math.pi)
 
-        theta = 0 + (targetTheta - self.heading)
+        if(x<0):
+            if(y>0):
+                targetTheta = targetTheta + 180
+            else:
+                targetTheta = targetTheta + 180
 
+        targetTheta = 360 - targetTheta
+
+        theta = 0 + int((targetTheta - self.heading))
+        print(targetTheta,'\t',self.heading)
+        #print(self.heading, '\t', targetTheta, '\t', theta)
+        #print("case_2: ",x, '\t', y,'\t',theta)
         return theta
 
     def case_3(self,other):
@@ -192,7 +232,7 @@ class Critter:
         '''
         correctTheta = self.heading % 360
         theta = (correctTheta * 2 * math.pi) / 360
-
+        '''
         if self.location[0]+self.size > 1200:
             # perform vector reflection from vector2.right
             self.heading = self.vector_reflect([-1,0])
@@ -205,7 +245,7 @@ class Critter:
         if self.location[1]+self.size < 0:
             # perform vector reflection from vector2.up
             self.heading = self.vector_reflect([0,1])
-
+        '''
         self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
         self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
 

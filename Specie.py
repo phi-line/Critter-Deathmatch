@@ -26,7 +26,7 @@ class Specie:
 
     def random_initializer(self):
         self.speed = uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
-        self.startSize = uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
+        self.startSize = 1#uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
         self.foodDecayRate = uniform(Specie.FOOD_MIN, Specie.FOOD_MAX)
         self.divideSize = 1.5 * self.startSize
         self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
@@ -52,7 +52,7 @@ class Specie:
         '''
         for i in range(0, self.startingPopulation):
             this_critter = Critter( location=[randint(0,1200),randint(0,600)],
-                                   heading=(0), size=randint(1 ,20),
+                                   heading=(0), size=15,
                                     typeName=self.typeName,
                                     color=self.color)
             #print(this_critter.location[0],'\t',this_critter.location[1])
