@@ -153,8 +153,30 @@ class Critter:
         '''
         correctTheta = self.heading % 360
         theta = (correctTheta * 2 * math.pi) / 360
+
+        if self.location[0]+self.size > 1200:
+            # perform vector reflection from vector2.right
+            self.heading = self.vector_reflect([-1,0])
+        if self.location[0]+self.size < 0:
+            # perform vector reflection from vector2.left
+            self.heading = self.vector_reflect([1,0])
+        if self.location[1]+self.size > 600:
+            # perform vector reflection from vector2.down
+            self.heading = self.vector_reflect([0,-1])
+        if self.location[1]+self.size < 0:
+            # perform vector reflection from vector2.up
+            self.heading = self.vector_reflect([0,1])
+
         self.location[0] = self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta)
         self.location[1] = self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta)
+
+    # [1,−1]−2×(−1)×[0,1]=[1,−1]+2×[0,1]=[1,−1]+[0,2]
+    def vector_reflect(self, normal):
+        def mult(vectorA, vectorB):
+            [(x, y) for x in vectorA for y in vectorB]
+        dir = self.heading
+        rhs = 2*(mult(mult(i_dir,normal),normal))
+        return [dir[0]-rhs[0],dir[1]-rhs[1]]
 
     @staticmethod
     def is_collided(fLocationLst, sLocationLst, fRadiusFlt, sRadiusFlt):
