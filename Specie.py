@@ -16,7 +16,7 @@ class Specie:
         self.divideSize = kwargs.pop('divideSize', 1.5 * self.startSize) # 1.5 * start size
         self.turnSpeedVector = kwargs.pop('turnSpeedVector', 45) # deg / sec (45 / sec)
         self.detectDistance = kwargs.pop('detectDistance', 2)
-        self.directionVector = kwargs.pop('directionVector', [0,0])
+        #self.directionVector = kwargs.pop('directionVector', 0)
         self.color = kwargs.pop('color', "#FF0000")
         self.typeName = kwargs.pop('typeName', "species_name")
         self.individuals = kwargs.pop('individuals', [])
@@ -31,7 +31,7 @@ class Specie:
         self.divideSize = 1.5 * self.startSize
         self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
-        self.directionVector = Specie.angle_to_vector(uniform(0,360))
+        self.directionVector = 0#Specie.angle_to_vector(uniform(0,360))
         self.color = Specie.gen_hex_colour_code()
         self.build_pop()
 
@@ -52,7 +52,7 @@ class Specie:
         '''
         for i in range(0, self.startingPopulation):
             this_critter = Critter( location=[randint(0,1200),randint(0,600)],
-                                   heading=(randint(0,360)), size=randint(1 ,20),
+                                   heading=(0), size=randint(1 ,20),
                                     typeName=self.typeName,
                                     color=self.color)
             #print(this_critter.location[0],'\t',this_critter.location[1])
@@ -77,7 +77,7 @@ class Specie:
                                  color=i.color,
                                  speed=i.speed,
                                  typeName=self.typeName)
-                muDir = 180#randrange(180, 360)
+                muDir = 0#randrange(180, 360)
                 childB = Critter(foodAmount=(i.foodAmount/2),
                                  size=(i.size/2),
                                  location=i.location,

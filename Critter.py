@@ -7,13 +7,13 @@ class Critter:
         self.size = kwargs.pop('size',self.foodAmount/100)   #diameter in pixels
         self.foodDecayRate = kwargs.pop('foodDecayRate', 10)       #10 #food lost per second
         self.divideSize = kwargs.pop('divideSize',self.size * 1.5)    # having greater than this amount triggers a division
-        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 45)         #45  # amount the heading can change a second in deg / sec (45 / sec)
-        self.detectDistance = kwargs.pop('detectDistance', 2)          #2 # number of radii beyond this radius that this can "see"
+        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 90)         #45  # amount the heading can change a second in deg / sec (45 / sec)
+        self.detectDistance = kwargs.pop('detectDistance', 3)          #2 # number of radii beyond this radius that this can "see"
         self.heading = kwargs.pop('heading',0)                            # direction of travel in degrees
         self.location = kwargs.pop('location',[300, 300]) #[300,300] # pixel coordinates
         self.color = kwargs.pop('color',"#00FF00")                      #"#00FF00" # display color
         self.name = kwargs.pop('name', 0)                      #0 # birth id given from specie.py
-        self.speed = kwargs.pop('speed',1)                   #1 # number of radii per second this can travel in a straight line
+        self.speed = kwargs.pop('speed',2)                   #1 # number of radii per second this can travel in a straight line
         self.alive = kwargs.pop('alive',True)
         self.typeName = kwargs.pop('typeName',0)                  #0 # the name of the species, is a number representing the index position in the species array, given by species.py
         self.touching = kwargs.pop('touching',False)                       # touching another object.
@@ -38,7 +38,7 @@ class Critter:
 
         for specie in species:
             for individual in specie.individuals:
-                if (individual.alive):
+                if (individual.alive and self.scale(individual) <= 1):
                     theta_1 = 0.0
                     imperative_1 = 0
                     scaleFactor = self.scale(individual)
@@ -58,27 +58,30 @@ class Critter:
                 shifts.append(newShift)
 
         for food in foods:
-            if (food.alive):
+            if (food.alive and self.scale(food) <= 1):
                 theta_2 = self.case_2(food)
                 imperative_2 = 4
-                scale_2 = 1000/(self.foodAmount*2)
+                scale_2 = self.scale(food) + 0#1000/(self.foodAmount*500)
                 newShift_2 = theta_2 * imperative_2 * scale_2
                 shifts.append(newShift_2)
+                break
 
         wiggle = self.case_5()
         shifts.append(wiggle)
 
         for value in shifts:
             shiftSum += value
-
-        shift = self.turnSpeedVector * shiftSum
-
-        if (shiftSum > self.turnSpeedVector):
+        shift = self.turnSpeedVector * shiftSum / (len(shifts)*2)
+        #print(shift)
+        if (shift > self.turnSpeedVector):
             shift = self.turnSpeedVector
+        if (shift < -1*self.turnSpeedVector):
+            shift = -1*self.turnSpeedVector
 
         # edge detection
-
-        self.heading += shift
+        print(self.heading,'\t',shift)
+        self.heading = self.heading + shift
+        #print(self.heading)
 
     def scale(self, other):
         '''
@@ -89,8 +92,9 @@ class Critter:
         distSquared = (other.location[0] - self.location[0])**2 + (other.location[1] - self.location[1])**2
         dist = math.sqrt(distSquared)
         if (dist == 0):
-            dist = self.detectDistance
-        return (self.size + self.detectDistance) / dist
+            dist = self.detectDistance-0.01
+        scale = (self.size + self.detectDistance*self.size) / dist
+        return scale
 
     def case_1(self, other):
         '''
@@ -98,9 +102,20 @@ class Critter:
         :param other:
         :return:
         '''
-        y_over_x = (other.location[1] - self.location[1]) / (other.location[0] - self.location[0])
-        targetTheta = math.tan(y_over_x)
+        y = (other.location[1] - self.location[1])
+        x = (other.location[0] - self.location[0])
+
+        if (x != 0):
+            y_over_x = y / x
+            targetTheta = math.tan(y_over_x)
+
+        if (y < 0):
+            targetTheta = 270
+        else:
+            targetTheta = 90
+
         theta = 180 + (targetTheta - self.heading)
+
         return theta
 
     def case_2(self, food):
@@ -109,9 +124,20 @@ class Critter:
         :param food:
         :return:
         '''
-        y_over_x = (food.location[1] - self.location[1]) / (food.location[0] - self.location[0])
-        targetTheta = math.tan(y_over_x)
+        y = (food.location[1] - self.location[1])
+        x = (food.location[0] - self.location[0])
+
+        if(x != 0):
+            y_over_x = y / x
+            targetTheta = math.tan(y_over_x)
+
+        if(y < 0):
+            targetTheta = 270
+        else:
+            targetTheta = 90
+
         theta = 0 + (targetTheta - self.heading)
+
         return theta
 
     def case_3(self,other):
@@ -120,9 +146,20 @@ class Critter:
         :param other:
         :return:
         '''
-        y_over_x = (other.location[1] - self.location[1]) / (other.location[0] - self.location[0])
-        targetTheta = math.tan(y_over_x)
+        y = (other.location[1] - self.location[1])
+        x = (other.location[0] - self.location[0])
+
+        if (x != 0):
+            y_over_x = y / x
+            targetTheta = math.tan(y_over_x)
+
+        if (y < 0):
+            targetTheta = 270
+        else:
+            targetTheta = 90
+
         theta = 0 + (targetTheta - self.heading)
+
         return theta
 
     def case_4(self, other):
@@ -140,7 +177,7 @@ class Critter:
         wiggle
         :return:
         '''
-        theta = randint(0, 10) -  5
+        theta = 0 #randint(0, 2) - 1
         return theta
 
     #include case 6: going out of bounds
