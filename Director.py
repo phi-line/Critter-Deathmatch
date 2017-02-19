@@ -8,7 +8,7 @@ from Specie import Specie
 from Critter import Critter
 from Food import Food
 
-NUM_SPECIES = 5
+NUM_SPECIES = 1
 STARTING_POPULATION = 10
 FRAME_TIME = 0.05
 WORLD_X_SIZE = 1200
@@ -46,8 +46,8 @@ def main_loop(gui,species,foods):
         time.sleep(FRAME_TIME)
 
 def logic(species, foods):
-    individualsToUpdate = []
 
+    individualsToUpdate = []
     for specie in species:
         for individual in specie.individuals:
             if individual.alive:
@@ -59,7 +59,7 @@ def logic(species, foods):
 
     for individual in individualsToUpdate:
         if individual.alive:
-            individual.update()
+            individual.update(speciesLst=species, foodLst=foods)
 
 def draw(gui, species, foods):
     gui.clear()

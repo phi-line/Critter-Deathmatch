@@ -16,7 +16,7 @@ class Critter:
         self.alive = kwargs.pop('alive',True)
         self.typeName = kwargs.pop('typeName',0)                  #0 # the name of the species, is a number representing the index position in the species array, given by species.py
         self.touching = kwargs.pop('touching',False)                       # touching another object.
-        self.needs_update = kwargs.pop('needs_update',False)                   # needs to be updated because its to old, to big, in combat
+        self.needs_update = kwargs.pop('needs_update',True)                   # needs to be updated because its to old, to big, in combat
         self.whoTouching = kwargs.pop('whoTouching',[])                       # a 2 element list of the species id and individual id of whomever this is touching
         self.gen = kwargs.pop('gen',0)                        #0 # what generation this is
 
@@ -90,12 +90,12 @@ class Critter:
                         individual.foodAmount += self.foodAmount
                     else:
                         pass
-
         for food in foodLst:
             # check if collided with food
             if( Critter.is_collided(self.location, food.location,
                                     self.size, food.size) and
                 food.alive == True):
-                self.foodAmount += food.foodAmount # add food amount
-                food.alive = False # kill food
+                #print("Hit food")
+                self.needs_update = True
+                self.foodAmount += food.consume()
 
