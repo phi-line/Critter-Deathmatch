@@ -8,13 +8,14 @@ from Specie import Specie
 from Critter import Critter
 from Food import Food
 
-NUM_SPECIES = 1
-STARTING_POPULATION = 2
-FRAME_TIME = 0.05
+NUM_SPECIES = 5
+STARTING_POPULATION = 1
+FRAME_TIME = 0.01
 WORLD_X_SIZE = 1200
 WORLD_Y_SIZE = 600
-FOOD_DENSITY = 0.0001
-FOOD_STRENGTH = 100
+#FOOD_DENSITY = 0.000075
+FOOD_DENSITY = 75
+FOOD_STRENGTH = 400
 
 def main():
     seed()
@@ -24,18 +25,19 @@ def main():
     foods = create_foods()
 
     for i in range(0,NUM_SPECIES):
-        newSpecie = Specie(startingPopulation=STARTING_POPULATION,
-                           typeName="species" + str(i))
+        #newSpecie = Specie(startingPopulation=STARTING_POPULATION,typeName="species" + str(i))
+        newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i)
         species.append(newSpecie)
 
     main_loop(gui,species,foods)
 
 def create_foods():
-    numFood = int(WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY)
+    #numFood = int(WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY)
+    numFood = FOOD_DENSITY
     foods = []
     for i in range(0,numFood):
-        x = randint(0,WORLD_X_SIZE)
-        y = randint(0,WORLD_Y_SIZE)
+        x = randint(50,WORLD_X_SIZE-50)
+        y = randint(50,WORLD_Y_SIZE-50)
         newFood = Food(FOOD_STRENGTH,i,[x,y])
         foods.append(newFood)
     return foods
@@ -62,7 +64,7 @@ def logic(species, foods):
     for specie in species:
         for individual in specie.individuals:
             if individual.alive:
-                individual.update(speciesLst=species, foodLst=foods)
+                individual.update(frameTime=FRAME_TIME,speciesLst=species, foodLst=foods)
 
 def draw(gui, species, foods):
     gui.clear()

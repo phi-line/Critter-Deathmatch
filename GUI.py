@@ -10,7 +10,7 @@ class GUI(tk.Canvas):
         self.win_x = world_x
         self.win_y = world_y
 
-        tk.Canvas.__init__(self, master=master, width=self.win_x, height=self.win_y, borderwidth=0, highlightthickness=0, bg="white")
+        tk.Canvas.__init__(self, master=master, width=self.win_x, height=self.win_y, borderwidth=0, highlightthickness=0, bg="gray")
         self.pack()
 
     def create_circle(self, x, y, r, color, **kwargs):
@@ -18,7 +18,12 @@ class GUI(tk.Canvas):
 
     def add_object_to_draw(self,object):
         #self.create_circle(object.location[0], object.location[1], object.size*6, '#cccccc', outline='#000000',width=2)
-        self.create_circle(object.location[0],object.location[1],object.size,object.color,outline='#000000',width=2)
+        x = int(object.location[0])
+        y = int(object.location[1])
+        r = object.size
+        c = object.color
+        #print('DRAW: ',x,'\t',y)
+        self.create_circle(x,y,r,c,outline='#000000',width=2)
 
     def draw(self):
         tk.Canvas.update_idletasks(self)

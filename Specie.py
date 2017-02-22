@@ -13,12 +13,12 @@ class Specie:
         self.speed  = kwargs.pop('speed', 1) # starts as 1 (size per second)
         self.startSize = kwargs.pop('startSize', 1) # starting food
         self.foodDecayRate = kwargs.pop('foodDecayRate', .01) # .01 speed
-        self.divideSize = kwargs.pop('divideSize', 1.5 * self.startSize) # 1.5 * start size
-        self.turnSpeedVector = kwargs.pop('turnSpeedVector', 45) # deg / sec (45 / sec)
+        self.divideSize = kwargs.pop('divideSize', 2 * self.startSize) # 1.5 * start size
+        #self.turnSpeedVector = kwargs.pop('turnSpeedVector', 45) # deg / sec (45 / sec)
         self.detectDistance = kwargs.pop('detectDistance', 2)
         #self.directionVector = kwargs.pop('directionVector', 0)
         self.color = kwargs.pop('color', "#FF0000")
-        self.typeName = kwargs.pop('typeName', "species_name")
+        self.typeName = kwargs.pop('typeName', 0)
         self.individuals = kwargs.pop('individuals', [])
         self.birthNumber = kwargs.pop('birthNumber', 0)
         self.startingPopulation = kwargs.pop('startingPopulation', 2)
@@ -28,10 +28,10 @@ class Specie:
         self.speed = uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
         self.startSize = 1#uniform(Specie.SPEED_MIN, Specie.SPEED_MAX)
         self.foodDecayRate = uniform(Specie.FOOD_MIN, Specie.FOOD_MAX)
-        self.divideSize = 1.5 * self.startSize
-        self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
+        self.divideSize = 2.0 * self.startSize
+        #self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
-        self.directionVector = 0#Specie.angle_to_vector(uniform(0,360))
+        #self.directionVector = 0#Specie.angle_to_vector(uniform(0,360))
         self.color = Specie.gen_hex_colour_code()
         self.build_pop()
 
@@ -51,9 +51,9 @@ class Specie:
         :return: void
         '''
         for i in range(0, self.startingPopulation):
-            this_critter = Critter( location=[randint(0,1200),randint(0,600)],
-                                   heading=(0), size=15,
-                                    typeName=self.typeName,
+            this_critter = Critter( location=[randint(50,1150),randint(50,550)],
+                                   heading=0, name=i,foodAmount=1500,
+                                    typeName=self.typeName,speed=8,startSpeed=10,foodDecayRate=0.05,
                                     color=self.color)
             #print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
@@ -69,21 +69,23 @@ class Specie:
         '''
         for i in self.individuals:
             if i.size > i.divideSize:
-                dir = 0#randrange(0, 180)
-                childA = Critter(foodAmount=(i.foodAmount/2),
-                                 size=(i.size/2),
-                                 location=i.location,
+                dir = 90#randrange(0, 180)
+                new_x = i.location[0]
+                new_y = i.location[1]
+                childA = Critter(foodAmount=(i.foodAmount/2.2),
+                                 #size=(i.size/2),
+                                 location=[new_x-randint(15,45),new_y-randint(15,45)],
                                  heading=dir,
                                  color=i.color,
-                                 speed=i.speed,
+                                 speed=9,#i.speed,
                                  typeName=self.typeName)
-                muDir = 0#randrange(180, 360)
-                childB = Critter(foodAmount=(i.foodAmount/2),
-                                 size=(i.size/2),
-                                 location=i.location,
+                muDir = 270#randrange(180, 360)
+                childB = Critter(foodAmount=(i.foodAmount/2.2),
+                                 #size=(i.size/2),
+                                 location=[new_x+randint(15,45),new_y+randint(15,45)],
                                  heading=muDir,
                                  color=i.color,
-                                 speed=i.speed,
+                                 speed=9,#i.speed,
                                  typeName=self.typeName)
                 i.alive = False
                 self.individuals.remove(i)
