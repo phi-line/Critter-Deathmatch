@@ -105,7 +105,7 @@ class Critter:
         self.mostImperativeIndex = 2
 
         if self.nearest[0].alive:
-            large   = 1.4 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
+            large   = 1.5 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
 
         if self.nearest[1].alive:
             food    = 1.3 - (self.foodAmount/(self.birthFoodAmount))
@@ -114,7 +114,7 @@ class Critter:
             small   = 1.0 - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
 
         if self.nearest[3].alive:
-            friend  = 0.2 - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
+            friend  = 0.1 - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
 
         #print('name: ',self.typeName,',',self.name,'\t',large,'\t',food,'\t',small,'\t',friend)
 
@@ -388,12 +388,12 @@ class Critter:
                     self.alive and individual.alive):
                     if(self.size > individual.size):
                         individual.alive = False # eating target
-                        self.size += individual.size
+                        #self.size += individual.size
                         self.foodAmount += individual.foodAmount
                     elif(self.size < individual.size):
                         self.alive = False # being ate by target
-                        individual.size += self.size
-                        individual.foodAmount += self.foodAmount
+                        #individual.size += self.size
+                        #individual.foodAmount += self.foodAmount
                     else:
                         pass
         for food in foodLst:
@@ -406,5 +406,6 @@ class Critter:
                 self.foodAmount += food.consume()
                 #foodLst.remove(food)
 
+        self.size = self.foodAmount / self.scaleModifier
 
 
