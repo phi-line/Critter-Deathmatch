@@ -413,46 +413,36 @@ class Critter:
         if self.foodAmount <= self.birthFoodAmount*.25:
             self.alive = False
 
-    def update(self,frameTime, speciesLst, foodLst):
+    def update(self, speciesLst, foodLst):
         '''
         update status of critter itself
         :param speciesLst: list of species
         :param foodLst: list of food
         :return: none
         '''
-        for species in speciesLst:
-            for individual in species.individuals:
-                # check if collided with target
-                if( Critter.is_collided(self.location, individual.location,
-                                        self.size, individual.size) and
-                    self.typeName != individual.typeName and
-                    self.alive and individual.alive):
+        large = self.nearest[0]
+        food = self.nearest[1]
+        small = self.nearest[2]
+        friend = self.nearest[3]
 
-                    if(self.size > individual.size):
-                        # apply damage once from the larger to smaller and then smaller to larger
-                        self.apply_damage(individual)
-                        pass
-                if (self.health <= 0):
-                    self.alive = False
+        if (Critter.is_collided(self.location, large.location,self.size, large.size) and self.typeName != large.typeName and self.alive and large.alive):
+            if (self.size > large.size):
+                self.apply_damage(large)
 
-                    # if(self.size > individual.size):
-                    #     individual.alive = False # eating target
-                    #     self.foodAmount += individual.foodAmount
-                    # elif(self.size < individual.size):
-                    #     self.alive = False # being ate by target
-                    #     #individual.foodAmount += self.foodAmount
-                    # else:
-                    #     pass
+        elif( Critter.is_collided(self.location, food.location,self.size, food.size) and food.alive):
+            self.needs_update = True
+            self.foodAmount += food.consume()
 
-        for food in foodLst.foodLst:
-            # check if collided with food
-            if( Critter.is_collided(self.location, food.location,
-                                    self.size, food.size) and
-                food.alive):
-                #print("Hit food")
-                self.needs_update = True
-                self.foodAmount += food.consume()
-                #foodLst.remove(food)
+        elif (Critter.is_collided(self.location, small.location,self.size, small.size) and self.typeName != small.typeName and self.alive and small.alive):
+            if (self.size > small.size):
+                self.apply_damage(small)
+
+        elif (Critter.is_collided(self.location, friend.location,self.size, friend.size) and self.typeName != friend.typeName and self.alive and friend.alive):
+            if (self.size > friend.size):
+                self.apply_damage(friend)
+
+        if (self.health <= 0):
+            self.alive = False
 
         self.size = self.foodAmount / self.scaleModifier
 

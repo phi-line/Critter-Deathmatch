@@ -80,7 +80,7 @@ def logic(species, foods):
     for specie in species:
         for individual in specie.individuals:
             if individual.alive:
-                individual.update(frameTime=FRAME_TIME,speciesLst=species, foodLst=foods)
+                individual.update(speciesLst=species, foodLst=foods)
 
     for squad in Squad.squadLst:
         squad.update()
@@ -101,18 +101,18 @@ def draw(screen_location, gui, species, foods):
                 gui.add_object_to_draw(individual)
 
     for squad in Squad.squadLst:
-        gui.add_object_to_draw(squad)
         center = squad.center()
         class Obj:
             pass
         obj = Obj()
         obj.heading = 0
-        obj.color = '#880000'
+        obj.color = '#999999'
         obj.location = center
         obj.size = 5
         for m in squad.members:
             obj.target = m.location
             gui.debug_overlay(obj)
+        gui.add_object_to_draw(squad)
 
     gui.draw()
 
