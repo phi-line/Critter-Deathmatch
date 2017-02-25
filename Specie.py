@@ -1,7 +1,6 @@
 from random import randint, uniform, random, randrange, choice
 from Critter import Critter
 from math import *
-from colorsys import hls_to_rgb, rgb_to_hls
 
 class Specie:
     SPEED_MIN, SPEED_MAX = 0.1, 1.0

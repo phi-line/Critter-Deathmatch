@@ -1,5 +1,6 @@
 import math
 from random import randint
+from colorsys import hls_to_rgb, rgb_to_hls
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -52,7 +53,7 @@ class Critter:
         self.nearest.append(Critter())
         self.nearest.append(Critter())
 
-        self.nearest[1] = foods[0]
+        self.nearest[1] = foods.foodLst[0]
 
         spacesFilled = 1
 
@@ -307,7 +308,7 @@ class Critter:
         if self.nearest_empty:
             self.init_nearest(species,foods)
 
-        for food in foods:
+        for food in foods.foodLst:
             self.compare_near_food(food)
 
         for specie in species:
@@ -430,7 +431,7 @@ class Critter:
                         #individual.foodAmount += self.foodAmount
                     else:
                         pass
-        for food in foodLst:
+        for food in foodLst.foodLst:
             # check if collided with food
             if( Critter.is_collided(self.location, food.location,
                                     self.size, food.size) and
@@ -441,5 +442,32 @@ class Critter:
                 #foodLst.remove(food)
 
         self.size = self.foodAmount / self.scaleModifier
+        #self.color = self.update_color(self.size)
+
+    def update_color(self, size):
+        '''broken'''
+        color = list(self.hex_to_rgb(self.color))
+        print(color)
+        for i in range(0, len(color)):
+            if color[i] <= 0:
+                color[i] += 25
+        print (color)
+        print ("\n")
+        color = list(rgb_to_hls(color[0], color[1], color[2]))
+        color[1] = self.foodAmount/self.birthFoodAmount
+        color[2] = (self.foodAmount/self.birthFoodAmount)*2.0
+        color = hls_to_rgb(color[0], color[1], color[2])
+        color = self.rgb_to_hex(color[0], color[1], color[2])
+        return color
+
+    @staticmethod
+    def rgb_to_hex(r,g,b):
+        return '#%02x%02x%02x' % (r,g,b)
+
+    @staticmethod
+    def hex_to_rgb(value):
+        value = value.lstrip('#')
+        lv = len(value)
+        return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 

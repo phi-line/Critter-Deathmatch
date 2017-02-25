@@ -1,5 +1,25 @@
 from random import randint
 
+class FoodLst:
+
+    def __init__(self, strength, *args,**kwargs):
+
+        self.foodLst = []
+
+    def remove(self, food):
+        self.foodLst.remove(food)
+        food = self.randLocation(food)
+        self.foodLst.append(food)
+
+    def add(self, food):
+        self.foodLst.append(food)
+
+    def randLocation(self, food):
+        location = [randint(50, 1150), randint(50, 550)]
+        food.location = location
+        return food
+
+
 class Food:
 
     def __init__(self,strength,name,location,*args,**kwargs):
@@ -14,11 +34,6 @@ class Food:
         self.typeName = -1
 
     def consume(self):
-        #print('CONSUMED: ',self.name)
-        #self.alive = False
-        self.location[0] = randint(50, 1150)
-        self.location[1] = randint(50, 550)
-        self.foodAmount += (randint(0,100)-50)
         if randint(0,100) < 20:
             self.alive = False
         #print(self.location[0],'\t',self.location[1])
