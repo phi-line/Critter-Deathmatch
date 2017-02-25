@@ -8,7 +8,7 @@ class Critter:
         self.flee_scalar = kwargs.pop('flee_scalar', 1.5)
         self.food_scalar = kwargs.pop('food_scalar', 1.3)
         self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
-        self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
+        self.flock_scalar = kwargs.pop('flock_scalar', 1.0)
 
         self.foodAmount = kwargs.pop('foodAmount', 1500)                      #starting health
         self.health = kwargs.pop('health', int(self.foodAmount/10))
@@ -125,6 +125,7 @@ class Critter:
             large   *= largeMod
 
         if self.nearest[1].alive:
+            #print(self.distance(self.nearest[1]))
             food    = 1.0 - (self.distance(self.nearest[1])/(self.detectDistance*self.size))
             food    *= abs(1.0 - (self.foodAmount/(self.birthFoodAmount*self.divideSize)))
             food    *= foodMod
@@ -151,20 +152,22 @@ class Critter:
         else:
             self.mostImperativeIndex = self.mostImperativeIndex
 
-        if self.nearest[self.mostImperativeIndex].size == self.size:
-            self.mostImperativeIndex = 1
+        if(self.mostImperativeIndex >=0):
+            if self.nearest[self.mostImperativeIndex].size == self.size:
+                self.mostImperativeIndex = 1
 
-        if self.nearest[self.mostImperativeIndex].typeName == self.typeName:
-            if self.nearest[self.mostImperativeIndex].name != self.name:
-                self.mostImperativeIndex = 3
+            if self.nearest[self.mostImperativeIndex].typeName == self.typeName:
+                if self.nearest[self.mostImperativeIndex].name != self.name:
+                    self.mostImperativeIndex = 3
 
-        if not self.nearest[self.mostImperativeIndex].alive:
-            self.mostImperativeIndex = 1
+            if not self.nearest[self.mostImperativeIndex].alive:
+                self.mostImperativeIndex = 1
 
-        self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
-        self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
+            self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
+            self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
+        else:
+            self.mostImperativeIndex = -1
 
-        #self.mostImperativeIndex = 1
         #print(self.mostImperativeIndex)
 
     def point_away_from_large(self):
@@ -288,7 +291,7 @@ class Critter:
         # print(targetTheta)
         # print('frame end\n')
 
-        self.heading = self.heading - targetTheta/randint(36,72)
+        self.heading = targetTheta#self.heading - targetTheta/randint(36,72)
 
     def point_heading(self):
         if self.mostImperativeIndex == 0:
@@ -300,6 +303,8 @@ class Critter:
         elif self.mostImperativeIndex == 3:
             self.point_with_friend()
         else:
+            #print('critter[',self.name,'] has no target')
+            self.target = self.location
             self.heading += (randint(0,30) - 15)
 
     def decide_action(self, species, foods):

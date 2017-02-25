@@ -26,8 +26,8 @@ class Specie:
         self.flee_scalar = kwargs.pop('flee_scalar', 1.5)
         self.food_scalar = kwargs.pop('food_scalar', 1.3)
         self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
-        self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
-        self.frame_time = kwargs.pop('frama_time', 0.02)
+        self.flock_scalar = kwargs.pop('flock_scalar', 1.0)
+        self.frame_time = kwargs.pop('frame_time', 0.02)
         self.random_initializer()
 
     def random_initializer(self):
