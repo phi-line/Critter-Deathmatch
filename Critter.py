@@ -1,6 +1,6 @@
 import math
 from random import randint
-from colorsys import hls_to_rgb, rgb_to_hls
+from colorsys import hsv_to_rgb, rgb_to_hsv
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -451,26 +451,21 @@ class Critter:
                 #foodLst.remove(food)
 
         self.size = self.foodAmount / self.scaleModifier
-        #self.color = self.update_color(self.size)
+        self.color = self.update_color()
 
     def apply_damage(self, other):
         self.health -= float(other.DPS)/self.frame_time
         other.health -= float(self.DPS)/self.frame_time
 
-    def update_color(self, size):
-        '''broken'''
-        color = list(self.hex_to_rgb(self.color))
-        print(color)
-        for i in range(0, len(color)):
-            if color[i] <= 0:
-                color[i] += 25
-        print (color)
-        print ("\n")
-        color = list(rgb_to_hls(color[0], color[1], color[2]))
-        color[1] = self.foodAmount/self.birthFoodAmount
-        color[2] = (self.foodAmount/self.birthFoodAmount)*2.0
-        color = hls_to_rgb(color[0], color[1], color[2])
-        color = self.rgb_to_hex(color[0], color[1], color[2])
+    def update_color(self):
+        color = self.color
+        rgb = Critter.hex_to_rgb(color)
+        hsv = rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+        hsv = list(hsv)
+        hsv[1] = ((self.health*10)/self.birthFoodAmount)/2
+        hsv = tuple(hsv)
+        rgb = hsv_to_rgb(hsv[0], hsv[1], hsv[2])
+        color = Critter.rgb_to_hex(rgb[0], rgb[1], rgb[2])
         return color
 
     @staticmethod
