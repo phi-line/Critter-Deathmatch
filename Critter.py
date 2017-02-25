@@ -468,18 +468,9 @@ class Critter:
             rgb[i] *= self.birthFoodAmount/(self.health*10)
             if rgb[i] >= 255:
                 rgb[i] = 255
+            if rgb[i] <= 0:
+                rgb[i] = 0
         self.color = self.rgb_to_hex(rgb[0],rgb[1],rgb[2])
-
-    @staticmethod
-    def color_scale(hexstr, scalefactor):
-        hexstr = hexstr.strip('#')
-        if scalefactor < 0 or len(hexstr) != 6:
-            return hexstr
-        r, g, b = int(hexstr[:2], 16), int(hexstr[2:4], 16), int(hexstr[4:], 16)
-        r = (r * scalefactor)
-        g = (g * scalefactor)
-        b = (b * scalefactor)
-        return "#%02x%02x%02x" % (r, g, b)
 
     @staticmethod
     def rgb_to_hex(r,g,b):
