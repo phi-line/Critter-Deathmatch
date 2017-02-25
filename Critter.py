@@ -4,6 +4,10 @@ from random import randint
 class Critter:
     def __init__(self, *args,**kwargs):
         self.scaleModifier = 100
+        self.flee_scalar = kwargs.pop('flee_scalar', 1.5)
+        self.food_scalar = kwargs.pop('food_scalar', 1.3)
+        self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
+        self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
 
         self.foodAmount = kwargs.pop('foodAmount', 1500)                      #starting health
         self.size = kwargs.pop('size',self.foodAmount/self.scaleModifier)   #diameter in pixels
@@ -105,16 +109,16 @@ class Critter:
         self.mostImperativeIndex = 2
 
         if self.nearest[0].alive:
-            large   = 1.5 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
+            flee   = self.flee_scalar - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
 
         if self.nearest[1].alive:
-            food    = 1.3 - (self.foodAmount/(self.birthFoodAmount))
+            food    = self.food_scalar - (self.foodAmount/(self.birthFoodAmount))
 
         if self.nearest[2].alive:
-            small   = 1.0 - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
+            small   = self.hunt_scalar - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
 
         if self.nearest[3].alive:
-            friend  = 0.1 - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
+            friend  = self.flock_scalar - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
 
         #print('name: ',self.typeName,',',self.name,'\t',large,'\t',food,'\t',small,'\t',friend)
 
