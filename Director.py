@@ -8,7 +8,7 @@ from Specie import Specie
 from Critter import Critter
 from Food import Food
 
-NUM_SPECIES = 5
+NUM_SPECIES = 1
 STARTING_POPULATION = 1
 FRAME_TIME = 0.02
 WORLD_X_SIZE = 1200 #canvas_x
@@ -16,13 +16,13 @@ WORLD_Y_SIZE = 600  #canvas_y
 CANVAS_X = 1200
 CANVAS_Y = 600
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 75
+FOOD_DENSITY = 1
 FOOD_STRENGTH = 400
 
 def main():
     seed()
 
-    gui = GUI(tk.Tk(),WORLD_X_SIZE,WORLD_Y_SIZE)
+    gui = GUI(tk.Tk(),CANVAS_X,CANVAS_Y)
     species = []
     foods = create_foods()
 

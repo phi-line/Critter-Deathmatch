@@ -123,7 +123,6 @@ class Critter:
             food    = 1.0 - (self.distance(self.nearest[1])/(self.detectDistance*self.size))
             food    *= abs(1.0 - (self.foodAmount/(self.birthFoodAmount*self.divideSize)))
             food    *= foodMod
-            print(food)
 
         if self.nearest[2].alive:
             small   = 1.0 - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
@@ -197,7 +196,7 @@ class Critter:
     def point_at_food(self):
         #print('name: ',self.nearest[1].name)
         x = int(self.nearest[1].location[0] - self.location[0])
-        y = -1*int(self.nearest[1].location[1] - self.location[1])
+        y = -1 * int(self.nearest[1].location[1] - self.location[1])
 
         if (x == 0):
             if (y < 0):
@@ -359,6 +358,8 @@ class Critter:
 
         self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size * dampening) * math.cos(theta))
         self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size * dampening) * math.sin(theta))
+
+        print(self.location[0],'\t',self.location[1])
 
         self.prevHeading = self.heading
 
