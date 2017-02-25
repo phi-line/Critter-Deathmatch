@@ -162,10 +162,11 @@ class Critter:
 
             if not self.nearest[self.mostImperativeIndex].alive:
                 self.mostImperativeIndex = 1
-            print('start target:  ', self.location)
+            #print('start target:  ', self.location)
+            self.target = self.nearest[self.mostImperativeIndex].location
             #self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
             #self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
-            print('  end target:  ', self.location)
+            #print('  end target:  ', self.location)
         else:
             self.mostImperativeIndex = -1
 
@@ -465,7 +466,7 @@ class Critter:
         hsv[1] = ((self.health*10)/self.birthFoodAmount)/2
         hsv = tuple(hsv)
         rgb = hsv_to_rgb(hsv[0], hsv[1], hsv[2])
-        color = Critter.rgb_to_hex(rgb[0], rgb[1], rgb[2])
+        color = Critter.rgb_to_hex(int(rgb[0]), int(rgb[1]), int(rgb[2]))
         return color
 
     @staticmethod
