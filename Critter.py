@@ -16,7 +16,7 @@ class Critter:
         #self.turnSpeedVector = kwargs.pop('turnSpeedVector', 30)         #45  # amount the heading can change a second in deg / sec (45 / sec)
         self.detectDistance = kwargs.pop('detectDistance', 5)          #2 # number of radii beyond this radius that this can "see"
         self.heading = kwargs.pop('heading',0)                            # direction of travel in degrees
-        self.location = kwargs.pop('location',[300, 300]) #[300,300] # pixel coordinates
+        self.location = kwargs.pop('location',[0, 0]) #[300,300] # pixel coordinates
         self.color = kwargs.pop('color',"#00FF00")                      #"#00FF00" # display color
         self.name = kwargs.pop('name', 0)                      #0 # birth id given from specie.py
         self.speed = kwargs.pop('speed',1)                   #1 # number of radii per second this can travel in a straight line
