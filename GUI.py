@@ -65,7 +65,7 @@ class GUI(tk.Canvas):
         y3 = int(y1 + 1.5*object.size*math.sin(theta))
 
         if (x2 != 0 and y2 != 0):
-            self.create_line(x1,y1,x2,y2, width=2, fill='black')#object.color)
+            self.create_line(x1,y1,x2,y2, width=2, fill=object.color)
         else:
             self.create_line(x1,y1,x2,y2, width=2, fill='#999999')
 
