@@ -424,6 +424,10 @@ class Critter:
                     if(self.size > individual.size):
                         # apply damage once from the larger to smaller and then smaller to larger
                         self.apply_damage(individual)
+                        self.update_color()
+                        individual.update_color()
+                        pass
+
                     # if(self.size > individual.size):
                     #     individual.alive = False # eating target
                     #     self.foodAmount += individual.foodAmount
@@ -432,7 +436,7 @@ class Critter:
                     #     #individual.foodAmount += self.foodAmount
                     # else:
                     #     pass
-                    pass
+
                 if (self.health <= 0):
                     self.alive = False
 
@@ -447,22 +451,25 @@ class Critter:
                 #foodLst.remove(food)
 
         self.size = self.foodAmount / self.scaleModifier
-        self.color = self.update_color()
 
     def apply_damage(self, other):
         self.health -= float(other.DPS)/self.frame_time
         other.health -= float(self.DPS)/self.frame_time
 
     def update_color(self):
-        color = self.color
-        rgb = Critter.hex_to_rgb(color)
-        hsv = rgb_to_hsv(rgb[0], rgb[1], rgb[2])
-        hsv = list(hsv)
-        hsv[1] = ((self.health*10)/self.birthFoodAmount)/2
-        hsv = tuple(hsv)
-        rgb = hsv_to_rgb(hsv[0], hsv[1], hsv[2])
-        color = Critter.rgb_to_hex(rgb[0], rgb[1], rgb[2])
-        return color
+        rgb = self.colorscale(self.color, self.birthFoodAmount/(self.health*10))
+        self.color = rgb_to_hsv(rgb[0],rgb[1],rgb[2])
+
+    @staticmethod
+    def color_scale(hexstr, scalefactor):
+        hexstr = hexstr.strip('#')
+        if scalefactor < 0 or len(hexstr) != 6:
+            return hexstr
+        r, g, b = int(hexstr[:2], 16), int(hexstr[2:4], 16), int(hexstr[4:], 16)
+        r = (r * scalefactor)
+        g = (g * scalefactor)
+        b = (b * scalefactor)
+        return "#%02x%02x%02x" % (r, g, b)
 
     @staticmethod
     def rgb_to_hex(r,g,b):
@@ -473,5 +480,3 @@ class Critter:
         value = value.lstrip('#')
         lv = len(value)
         return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
-
-
