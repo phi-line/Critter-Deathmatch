@@ -1,6 +1,7 @@
 from random import randint, uniform, random, randrange, choice
 from Critter import Critter
 from math import *
+from colorsys import hls_to_rgb, rgb_to_hls
 
 class Specie:
     SPEED_MIN, SPEED_MAX = 0.1, 1.0
@@ -8,6 +9,7 @@ class Specie:
     FOOD_MIN, FOOD_MAX = 0.1, 1
     TURN_SPEED_MIN, TURN_SPEED_MAX = 30, 45
     DETECT_MIN, DETECT_MAX = 1, 5
+    SCALAR_MIN, SCALAR_MAX = 0, 2.0
 
     def __init__(self, *args, **kwargs):
         self.speed  = kwargs.pop('speed', 1) # starts as 1 (size per second)
@@ -22,6 +24,10 @@ class Specie:
         self.individuals = kwargs.pop('individuals', [])
         self.birthNumber = kwargs.pop('birthNumber', 0)
         self.startingPopulation = kwargs.pop('startingPopulation', 2)
+        self.flee_scalar = kwargs.pop('flee_scalar', 1.5)
+        self.food_scalar = kwargs.pop('food_scalar', 1.3)
+        self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
+        self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
         self.random_initializer()
 
     def random_initializer(self):
@@ -31,8 +37,13 @@ class Specie:
         self.divideSize = 2.0 * self.startSize
         #self.turnSpeedVector = uniform(Specie.TURN_SPEED_MIN, Specie.TURN_SPEED_MAX)
         self.detectDistance = uniform(Specie.DETECT_MIN, Specie.DETECT_MAX)
-        #self.directionVector = 0#Specie.angle_to_vector(uniform(0,360))
+        #self.directionVector = 0 #Specie.angle_to_vector(uniform(0,360))
         self.color = Specie.gen_hex_colour_code()
+        self.flee_scalar = uniform(Specie.SCALAR_MIN, Specie.SCALAR_MAX)
+        self.food_scalar = uniform(Specie.SCALAR_MIN, Specie.SCALAR_MAX)
+        self.hunt_scalar = uniform(Specie.SCALAR_MIN, Specie.SCALAR_MAX)
+        self.flock_scalar = uniform(Specie.SCALAR_MIN, Specie.SCALAR_MAX)
+
         self.build_pop()
 
     @staticmethod
@@ -42,7 +53,25 @@ class Specie:
     @staticmethod
     def gen_hex_colour_code():
         return "#" + ''.join([choice('0123456789ABCDEF') for x in range(6)])
-        #+ str(hex(randint(0, 16777215))[2:].upper())
+        #+ str(hex(randint(0, 16777215))[2:].upper
+
+    def gen_hue_DNA(self):
+        '''
+        generates a hue depending on the scalar values set in the critter constructor
+        R - hunt_scalar / 2
+        G - food_scalar / 2
+        B - flee_scalar / 2
+        :return: list(color) as HEX
+        '''
+        R = (self.hunt_scalar / 2.0)
+        G = (self.food_scalar / 2.0)
+        B = (self.flee_scalar / 2.0)
+        color = self.rgb_to_hex(int(R*255), int(G*255), int(B*255))
+        return color
+
+    @staticmethod
+    def rgb_to_hex(r,g,b):
+        return '#%02x%02x%02x' % (r,g,b)
 
     #fucntion that builds a list
     def build_pop(self):
@@ -53,8 +82,9 @@ class Specie:
         for i in range(0, self.startingPopulation):
             this_critter = Critter( location=[randint(50,1150),randint(50,550)],
                                    heading=0, name=i,foodAmount=1500,
-                                    typeName=self.typeName,speed=8,startSpeed=1,foodDecayRate=0.1,
-                                    color=self.color)
+                                    typeName=self.typeName,speed=7,startSpeed=1,foodDecayRate=0.1,
+                                    color=self.gen_hue_DNA(), flee_scalar=self.flee_scalar, food_scalar=self.food_scalar,
+                                    hunt_scalar=self.hunt_scalar, flock_scalar=self.flock_scalar)
             #print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
 

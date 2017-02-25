@@ -9,21 +9,24 @@ from Critter import Critter
 from Food import Food
 from Food import FoodLst
 
-NUM_SPECIES = 5
+NUM_SPECIES = 1
 STARTING_POPULATION = 1
 FRAME_TIME = 0.02
 WORLD_X_SIZE = 1200 #canvas_x
 WORLD_Y_SIZE = 600  #canvas_y
+CANVAS_X = 1200
+CANVAS_Y = 600
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 75
+FOOD_DENSITY = 1
 FOOD_STRENGTH = 400
 
 def main():
     seed()
 
-    gui = GUI(tk.Tk(),WORLD_X_SIZE,WORLD_Y_SIZE)
+    gui = GUI(tk.Tk(),CANVAS_X,CANVAS_Y)
     species = []
     foods = create_foods()
+    print(foods)
 
     for i in range(0,NUM_SPECIES):
         #newSpecie = Specie(startingPopulation=STARTING_POPULATION,typeName="species" + str(i))
@@ -74,6 +77,8 @@ def draw(gui, species, foods):
     for food in foods.foodLst:
         if(food.alive):
             gui.add_object_to_draw(food)
+        else:
+            foods.remove(food)
 
     for specie in species:
         for individual in specie.individuals:

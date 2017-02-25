@@ -4,6 +4,10 @@ from random import randint
 class Critter:
     def __init__(self, *args,**kwargs):
         self.scaleModifier = 100
+        self.flee_scalar = kwargs.pop('flee_scalar', 1.5)
+        self.food_scalar = kwargs.pop('food_scalar', 1.3)
+        self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
+        self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
 
         self.foodAmount = kwargs.pop('foodAmount', 1500)                      #starting health
         self.size = kwargs.pop('size',self.foodAmount/self.scaleModifier)   #diameter in pixels
@@ -12,7 +16,7 @@ class Critter:
         #self.turnSpeedVector = kwargs.pop('turnSpeedVector', 30)         #45  # amount the heading can change a second in deg / sec (45 / sec)
         self.detectDistance = kwargs.pop('detectDistance', 5)          #2 # number of radii beyond this radius that this can "see"
         self.heading = kwargs.pop('heading',0)                            # direction of travel in degrees
-        self.location = kwargs.pop('location',[300, 300]) #[300,300] # pixel coordinates
+        self.location = kwargs.pop('location',[0, 0]) #[300,300] # pixel coordinates
         self.color = kwargs.pop('color',"#00FF00")                      #"#00FF00" # display color
         self.name = kwargs.pop('name', 0)                      #0 # birth id given from specie.py
         self.speed = kwargs.pop('speed',1)                   #1 # number of radii per second this can travel in a straight line
@@ -104,19 +108,20 @@ class Critter:
         small = -1
         friend = -1
 
-        largeMod = 1    #flee
-        foodMod = 1     #food
-        smallMod = 1    #hunt
-        friendMod = 1   #flock
+        largeMod = self.flee_scalar    #flee
+        foodMod = self.food_scalar     #food
+        smallMod = self.hunt_scalar    #hunt
+        friendMod = self.flock_scalar  #flock
 
-        self.mostImperativeIndex = 1
+        self.mostImperativeIndex = -1
 
         if self.nearest[0].alive:
             large   = 1.0 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
             large   *= largeMod
 
         if self.nearest[1].alive:
-            food    = 2.0 - ((self.foodAmount/self.birthFoodAmount) + (self.distance(self.nearest[1])/self.detectDistance*self.size))
+            food    = 1.0 - (self.distance(self.nearest[1])/(self.detectDistance*self.size))
+            food    *= abs(1.0 - (self.foodAmount/(self.birthFoodAmount*self.divideSize)))
             food    *= foodMod
 
         if self.nearest[2].alive:
@@ -191,7 +196,7 @@ class Critter:
     def point_at_food(self):
         #print('name: ',self.nearest[1].name)
         x = int(self.nearest[1].location[0] - self.location[0])
-        y = -1*int(self.nearest[1].location[1] - self.location[1])
+        y = -1 * int(self.nearest[1].location[1] - self.location[1])
 
         if (x == 0):
             if (y < 0):
@@ -353,6 +358,8 @@ class Critter:
 
         self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size * dampening) * math.cos(theta))
         self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size * dampening) * math.sin(theta))
+
+        print(self.location[0],'\t',self.location[1])
 
         self.prevHeading = self.heading
 
