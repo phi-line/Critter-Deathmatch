@@ -28,6 +28,7 @@ class Specie:
         self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
         self.flock_scalar = kwargs.pop('flock_scalar', 1.0)
         self.frame_time = kwargs.pop('frame_time', 0.02)
+        self.world_space = kwargs.pop('world_space',[0,0,1200,600])
         self.random_initializer()
 
     def random_initializer(self):
@@ -93,7 +94,11 @@ class Specie:
                                     food_scalar=self.food_scalar,
                                     hunt_scalar=self.hunt_scalar,
                                     flock_scalar=self.flock_scalar,
-                                    frame_time=self.frame_time)
+                                    frame_time=self.frame_time,
+                                    world_x_min=self.world_space[0],
+                                    world_y_min=self.world_space[1],
+                                    world_x_max=self.world_space[2],
+                                    world_y_max=self.world_space[3])
             #print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
 
@@ -118,7 +123,12 @@ class Specie:
                                  color=i.color,
                                  speed=9,#i.speed,
                                  typeName=self.typeName,
-                                 name=len(self.individuals) + 1)
+                                 name=len(self.individuals) + 1,
+                                 frame_time=self.frame_time,
+                                 world_x_min=self.world_space[0],
+                                 world_y_min=self.world_space[1],
+                                 world_x_max=self.world_space[2],
+                                 world_y_max=self.world_space[3])
                 muDir = 270#randrange(180, 360)
                 childB = Critter(foodAmount=(i.foodAmount/2.2),
                                  #size=(i.size/2),
@@ -127,7 +137,12 @@ class Specie:
                                  color=i.color,
                                  speed=9,#i.speed,
                                  typeName=self.typeName,
-                                 name=len(self.individuals) + 1)
+                                 name=len(self.individuals) + 1,
+                                 frame_time=self.frame_time,
+                                 world_x_min=self.world_space[0],
+                                 world_y_min=self.world_space[1],
+                                 world_x_max=self.world_space[2],
+                                 world_y_max=self.world_space[3])
                 i.alive = False
                 self.individuals.remove(i)
                 self.individuals.append(childA)
@@ -139,6 +154,6 @@ class Specie:
         Removed dead flagged members from the population
         :return: void
         '''
-        for i in self.inividuals:
+        for i in self.individuals:
             if not i.alive:
                 self.individuals.remove(i)

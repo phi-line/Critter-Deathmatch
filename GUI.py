@@ -72,6 +72,16 @@ class GUI(tk.Canvas):
         if(object.heading != 0):
             self.create_line(x1, y1, x3, y3, width=3, fill='#111111')
 
+    def is_object_in_draw_space(self,object):
+        x = self.map_x_coordinate(object.location[0])
+        y = self.pixel_y_max - self.map_y_coordinate(object.location[1])
+
+        if (x >= self.display_x_min and x <= self.display_x_max):
+            if (y >= self.display_y_min and y <= self.display_y_max):
+                return True
+
+        return False
+
     def create_circle(self, x, y, r, color, **kwargs):
         #self.create_rectangle(x-r*6,y-r*6,x+r*6,y+r*6, fill='#444444', outline='#000000',width=2, stipple='gray75')
         return self.create_oval(x - r, y - r, x + r, y + r, fill=color, **kwargs)
@@ -83,12 +93,23 @@ class GUI(tk.Canvas):
         c = object.color
         #print('DRAW: ',x,'\t',y)
 
-        if(x >= self.display_x_min and x <= self.display_x_max):
-            if (y >= self.display_y_min and y <= self.display_y_max):
-                self.debug_overlay(object)
-                self.create_circle(x,y,r,c,outline='#000000',width=2)
+        if(self.is_object_in_draw_space(object)):
+            self.debug_overlay(object)
+            self.create_circle(x,y,r,c,outline='#000000',width=2)
+
+    def draw_world_borders(self):
+        x1 = self.pixel_x_min
+        y1 = self.pixel_y_min
+        x2 = self.pixel_x_max
+        y2 = self.pixel_y_max
+
+        self.create_line(x1, y1, x2, y1, width=10, fill='#000000')
+        self.create_line(x2, y1, x2, y2, width=10, fill='#000000')
+        self.create_line(x2, y2, x1, y2, width=10, fill='#000000')
+        self.create_line(x1, y2, x1, y1, width=10, fill='#000000')
 
     def draw(self):
+        self.draw_world_borders()
         tk.Canvas.update_idletasks(self)
         tk.Canvas.update(self)
 

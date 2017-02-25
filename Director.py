@@ -107,7 +107,7 @@ def draw(screen_location, gui, species, foods):
             pass
         obj = Obj()
         obj.heading = 0
-        obj.color = 'red'
+        obj.color = '#880000'
         obj.location = center
         obj.size = 5
         for m in squad.members:

@@ -43,6 +43,11 @@ class Critter:
 
         self.frame_time = kwargs.pop('frame_time', 0.02)
 
+        self.world_x_min = kwargs.pop('world_x_min',0)
+        self.world_y_min = kwargs.pop('world_y_min',0)
+        self.world_x_max = kwargs.pop('world_x_max',1200)
+        self.world_y_max = kwargs.pop('world_y_max',600)
+
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
         dist = math.sqrt(distSquared)
@@ -52,10 +57,10 @@ class Critter:
         if not self.nearest_empty:
             return
 
-        self.nearest.append(Critter())
-        self.nearest.append(Critter())
-        self.nearest.append(Critter())
-        self.nearest.append(Critter())
+        self.nearest.append(self)
+        self.nearest.append(self)
+        self.nearest.append(self)
+        self.nearest.append(self)
 
         self.nearest[1] = foods.foodLst[0]
 
@@ -81,26 +86,26 @@ class Critter:
     def compare_near_large(self,other):
         cur = self.distance(self.nearest[0])
         new = self.distance(other)
-        if (new < cur or not self.nearest[0].alive):
+        if (new < cur or not self.nearest[0].alive or self.nearest[0].name == self.name):
             self.nearest[0] = other
 
     def compare_near_food(self, other):
         cur = self.distance(self.nearest[1])
         new = self.distance(other)
-        if (new < cur or not self.nearest[1].alive):
+        if (new < cur or not self.nearest[1].alive or self.nearest[1].name == self.name):
             #print('new target: ', other.name,' dist: ', new)
             self.nearest[1] = other
 
     def compare_near_small(self, other):
         cur = self.distance(self.nearest[2])
         new = self.distance(other)
-        if (new < cur or not self.nearest[2].alive):
+        if (new < cur or not self.nearest[2].alive or self.nearest[2].name == self.name):
             self.nearest[2] = other
 
     def compare_near_friend(self, other):
         cur = self.distance(self.nearest[3])
         new = self.distance(other)
-        if (new < cur or not self.nearest[3].alive):
+        if (new < cur or not self.nearest[3].alive or self.nearest[3].name == self.name):
             self.nearest[3] = other
 
     #method to find most imperative index
@@ -162,11 +167,8 @@ class Critter:
 
             if not self.nearest[self.mostImperativeIndex].alive:
                 self.mostImperativeIndex = 1
-            #print('start target:  ', self.location)
+
             self.target = self.nearest[self.mostImperativeIndex].location
-            #self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
-            #self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
-            #print('  end target:  ', self.location)
         else:
             self.mostImperativeIndex = -1
 
@@ -348,18 +350,18 @@ class Critter:
     def move(self):
 
 
-        if self.location[0] + self.size > 1195:
+        if self.location[0] + self.size > self.world_x_max*0.95:
             # perform vector reflection from vector2.right
-            self.heading = randint(110, 150)  # self.vector_reflect([-1, 0])
-        elif self.location[0] - self.size < 5:
+            self.heading = randint(110, 250)
+        elif self.location[0] - self.size < self.world_x_min*0.95:
             # perform vector reflection from vector2.left
-            self.heading = randint(0, 20)  # self.vector_reflect([1, 0])
-        elif self.location[1] + self.size > 595:
+            self.heading = randint(110, 250) + 180
+        elif self.location[1] + self.size > self.world_y_max*0.95:
             # perform vector reflection from vector2.down
-            self.heading = randint(20, 160)  # self.vector_reflect([0, -1])
-        elif self.location[1] - self.size < 5:
+            self.heading = randint(20, 160)
+        elif self.location[1] - self.size < self.world_y_min*0.95:
             # perform vector reflection from vector2.up
-            self.heading = randint(200, 340)  # self.vector_reflect([0, 1])
+            self.heading = randint(200, 340)
 
         antiHeading = (self.heading + 180) % 360
         newHeadingOffset = (abs(antiHeading - self.prevHeading)) % 360
