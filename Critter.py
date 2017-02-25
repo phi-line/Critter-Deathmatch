@@ -11,6 +11,9 @@ class Critter:
         self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
 
         self.foodAmount = kwargs.pop('foodAmount', 1500)                      #starting health
+        self.health = kwargs.pop('health', int(self.foodAmount/10))
+        self.DPS = kwargs.pop('DPS', int(self.health/self.hunt_scalar))
+
         self.size = kwargs.pop('size',self.foodAmount/self.scaleModifier)   #diameter in pixels
         self.foodDecayRate = kwargs.pop('foodDecayRate', 0)       #10 #food lost per second
         self.divideSize = kwargs.pop('divideSize',self.size * 2)    # having greater than this amount triggers a division
@@ -29,7 +32,6 @@ class Critter:
         self.whoTouching = kwargs.pop('whoTouching',[])                       # a 2 element list of the species id and individual id of whomever this is touching
         self.gen = kwargs.pop('gen',0)                        #0 # what generation this is
         self.birthFoodAmount = kwargs.pop('foodAmount', 1000)
-
         # list of indexes for nearest objects:
         # large,food,small,friend
         self.nearest = []
@@ -38,6 +40,8 @@ class Critter:
         self.newLocation = [0,0]
         self.prevHeading = 0
         self.target = [0,0]
+
+        self.frame_time = kwargs.pop('frame_time', 0.02)
 
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
@@ -364,16 +368,6 @@ class Critter:
 
         self.prevHeading = self.heading
 
-    # [1,−1]−2×(−1)×[0,1]=[1,−1]+2×[0,1]=[1,−1]+[0,2]
-    def vector_reflect(self, normal):
-        def mult(vectorA, vectorB):
-            # return [(x, y) for x in vectorA for y in vectorB]
-            return
-
-        dir = self.heading
-        rhs = 2 * (mult(mult(dir, normal), normal))
-        return [dir[0] - rhs[0], dir[1] - rhs[1]]
-
     @staticmethod
     def is_collided(fLocationLst, sLocationLst, fRadiusFlt, sRadiusFlt):
         '''
@@ -421,16 +415,22 @@ class Critter:
                                         self.size, individual.size) and
                     self.typeName != individual.typeName and
                     self.alive and individual.alive):
+
                     if(self.size > individual.size):
-                        individual.alive = False # eating target
-                        #self.size += individual.size
-                        self.foodAmount += individual.foodAmount
-                    elif(self.size < individual.size):
-                        self.alive = False # being ate by target
-                        #individual.size += self.size
-                        #individual.foodAmount += self.foodAmount
-                    else:
-                        pass
+                        # apply damage once from the larger to smaller and then smaller to larger
+                        self.apply_damage(individual)
+                    # if(self.size > individual.size):
+                    #     individual.alive = False # eating target
+                    #     self.foodAmount += individual.foodAmount
+                    # elif(self.size < individual.size):
+                    #     self.alive = False # being ate by target
+                    #     #individual.foodAmount += self.foodAmount
+                    # else:
+                    #     pass
+                    pass
+                if (self.health <= 0):
+                    self.alive = False
+
         for food in foodLst.foodLst:
             # check if collided with food
             if( Critter.is_collided(self.location, food.location,
@@ -443,6 +443,10 @@ class Critter:
 
         self.size = self.foodAmount / self.scaleModifier
         #self.color = self.update_color(self.size)
+
+    def apply_damage(self, other):
+        self.health -= float(other.DPS)/self.frame_time
+        other.health -= float(self.DPS)/self.frame_time
 
     def update_color(self, size):
         '''broken'''

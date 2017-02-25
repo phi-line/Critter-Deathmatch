@@ -9,7 +9,7 @@ from Critter import Critter
 from Food import Food
 from Food import FoodLst
 
-NUM_SPECIES = 1
+NUM_SPECIES = 3
 STARTING_POPULATION = 1
 FRAME_TIME = 0.02
 WORLD_X_SIZE = 1200 #canvas_x
@@ -30,7 +30,7 @@ def main():
 
     for i in range(0,NUM_SPECIES):
         #newSpecie = Specie(startingPopulation=STARTING_POPULATION,typeName="species" + str(i))
-        newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i)
+        newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i, frama_time=FRAME_TIME)
         species.append(newSpecie)
 
     main_loop(gui,species,foods)

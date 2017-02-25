@@ -27,6 +27,7 @@ class Specie:
         self.food_scalar = kwargs.pop('food_scalar', 1.3)
         self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
         self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
+        self.frame_time = kwargs.pop('frama_time', 0.02)
         self.random_initializer()
 
     def random_initializer(self):
@@ -83,7 +84,7 @@ class Specie:
                                    heading=0, name=i,foodAmount=1500,
                                     typeName=self.typeName,speed=7,startSpeed=1,foodDecayRate=0.1,
                                     color=self.gen_hue_DNA(), flee_scalar=self.flee_scalar, food_scalar=self.food_scalar,
-                                    hunt_scalar=self.hunt_scalar, flock_scalar=self.flock_scalar)
+                                    hunt_scalar=self.hunt_scalar, flock_scalar=self.flock_scalar, frame_time=self.frame_time)
             #print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
 
