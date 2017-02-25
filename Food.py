@@ -6,7 +6,8 @@ class Food:
         self.foodAmount = strength
         self.name = name
         self.location = location
-        self.target = location #ignore DEBUG only
+        self.target = location  #ignore DEBUG only
+        self.heading = 0        #ignore DEBUG only
         self.size = self.foodAmount/100
         self.alive = True
         self.color = '#9A7A00'
