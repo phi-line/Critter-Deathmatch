@@ -35,6 +35,8 @@ class Critter:
         self.mostImperativeIndex = 0
         self.nearest_empty = True
         self.newLocation = [0,0]
+        self.prevHeading = 0
+        self.target = [0,0]
 
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
@@ -106,19 +108,28 @@ class Critter:
         small = -1
         friend = -1
 
-        self.mostImperativeIndex = 2
+        largeMod = self.flee_scalar    #flee
+        foodMod = self.food_scalar     #food
+        smallMod = self.hunt_scalar    #hunt
+        friendMod = self.flock_scalar  #flock
+
+        self.mostImperativeIndex = 1
 
         if self.nearest[0].alive:
-            flee   = self.flee_scalar - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
+            large   = 1.0 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
+            large   *= largeMod
 
         if self.nearest[1].alive:
-            food    = self.food_scalar - (self.foodAmount/(self.birthFoodAmount))
+            food    = 2.0 - ((self.foodAmount/self.birthFoodAmount) + (self.distance(self.nearest[1])/self.detectDistance*self.size))
+            food    *= foodMod
 
         if self.nearest[2].alive:
-            small   = self.hunt_scalar - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
+            small   = 1.0 - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
+            small   *= smallMod
 
         if self.nearest[3].alive:
-            friend  = self.flock_scalar - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
+            friend  = 1.0 - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
+            friend  *= friendMod
 
         #print('name: ',self.typeName,',',self.name,'\t',large,'\t',food,'\t',small,'\t',friend)
 
@@ -143,6 +154,9 @@ class Critter:
 
         if not self.nearest[self.mostImperativeIndex].alive:
             self.mostImperativeIndex = 1
+
+        self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
+        self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
 
         #self.mostImperativeIndex = 1
         #print(self.mostImperativeIndex)
@@ -173,7 +187,7 @@ class Critter:
             targetTheta = targetTheta + 360
         # print(targetTheta)
         # print('frame end\n')
-        self.speed +=0.5
+        #self.speed +=0.1
         if self.speed > 12:
             self.speed = 12
         self.heading = targetTheta - self.heading / randint(180, 360)
@@ -279,6 +293,8 @@ class Critter:
             self.point_at_small()
         elif self.mostImperativeIndex == 3:
             self.point_with_friend()
+        else:
+            self.heading += (randint(0,30) - 15)
 
     def decide_action(self, species, foods):
         '''
@@ -314,6 +330,8 @@ class Critter:
         #self.heading = 0 # to the left for demo
 
     def move(self, frameTime):
+
+
         if self.location[0] + self.size > 1195:
             # perform vector reflection from vector2.right
             self.heading = randint(110, 150)  # self.vector_reflect([-1, 0])
@@ -327,11 +345,20 @@ class Critter:
             # perform vector reflection from vector2.up
             self.heading = randint(200, 340)  # self.vector_reflect([0, 1])
 
+        antiHeading = (self.heading + 180) % 360
+        newHeadingOffset = (abs(antiHeading - self.prevHeading)) % 360
+        dampening = (newHeadingOffset / 180)
+        if dampening > 1:
+            dampening = 1
+        #print(dampening)
+
         correctTheta = self.heading % 360
         theta = (correctTheta * 2 * math.pi) / 360
 
-        self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size) * math.cos(theta))
-        self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size) * math.sin(theta))
+        self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size * dampening) * math.cos(theta))
+        self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size * dampening) * math.sin(theta))
+
+        self.prevHeading = self.heading
 
     # [1,−1]−2×(−1)×[0,1]=[1,−1]+2×[0,1]=[1,−1]+[0,2]
     def vector_reflect(self, normal):
