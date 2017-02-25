@@ -109,15 +109,17 @@ class Critter:
         smallMod = 1    #hunt
         friendMod = 1   #flock
 
-        self.mostImperativeIndex = 1
+        self.mostImperativeIndex = -1
 
         if self.nearest[0].alive:
             large   = 1.0 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
             large   *= largeMod
 
         if self.nearest[1].alive:
-            food    = 2.0 - ((self.foodAmount/self.birthFoodAmount) + (self.distance(self.nearest[1])/self.detectDistance*self.size))
+            food    = 1.0 - (self.distance(self.nearest[1])/(self.detectDistance*self.size))
+            food    *= abs(1.0 - (self.foodAmount/(self.birthFoodAmount*self.divideSize)))
             food    *= foodMod
+            print(food)
 
         if self.nearest[2].alive:
             small   = 1.0 - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
