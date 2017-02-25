@@ -1,6 +1,6 @@
 import math
 from random import randint
-from colorsys import hsv_to_rgb, rgb_to_hsv
+import AI
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -108,217 +108,9 @@ class Critter:
         if (new < cur or not self.nearest[3].alive or self.nearest[3].name == self.name):
             self.nearest[3] = other
 
-    #method to find most imperative index
-    def update_imperative(self):
-        if self.size <= 0:
-            return
 
-        large = -1
-        food = -1
-        small = -1
-        friend = -1
 
-        largeMod = self.flee_scalar    #flee
-        foodMod = self.food_scalar     #food
-        smallMod = self.hunt_scalar    #hunt
-        friendMod = self.flock_scalar  #flock
-
-        self.mostImperativeIndex = -1
-
-        if self.nearest[0].alive:
-            large   = 1.0 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
-            large   *= largeMod
-
-        if self.nearest[1].alive:
-            #print(self.distance(self.nearest[1]))
-            food    = 1.0 - (self.distance(self.nearest[1])/(self.detectDistance*self.size))
-            food    *= abs(1.0 - (self.foodAmount/(self.birthFoodAmount*self.divideSize)))
-            food    *= foodMod
-
-        if self.nearest[2].alive:
-            small   = 1.0 - (self.distance(self.nearest[2])/(self.detectDistance*self.size))
-            small   *= smallMod
-
-        if self.nearest[3].alive:
-            friend  = 1.0 - (self.distance(self.nearest[3])/(self.detectDistance*self.size))
-            friend  *= friendMod
-
-        #print('name: ',self.typeName,',',self.name,'\t',large,'\t',food,'\t',small,'\t',friend)
-
-        #find the largest value from above
-        if(large > 0 and large > food and large > small and large > friend):
-            self.mostImperativeIndex = 0
-        elif(food > 0 and food > large and food > small and food > friend):
-            self.mostImperativeIndex = 1
-        elif(small > 0 and small > large and small > food and small > friend):
-            self.mostImperativeIndex = 2
-        elif( friend > 0 and friend > large and friend > food and friend > small):
-            self.mostImperativeIndex = 3
-        else:
-            self.mostImperativeIndex = self.mostImperativeIndex
-
-        if(self.mostImperativeIndex >=0):
-            if self.nearest[self.mostImperativeIndex].size == self.size:
-                self.mostImperativeIndex = 1
-
-            if self.nearest[self.mostImperativeIndex].typeName == self.typeName:
-                if self.nearest[self.mostImperativeIndex].name != self.name:
-                    self.mostImperativeIndex = 3
-
-            if not self.nearest[self.mostImperativeIndex].alive:
-                self.mostImperativeIndex = 1
-
-            self.target = self.nearest[self.mostImperativeIndex].location
-        else:
-            self.mostImperativeIndex = -1
-
-        #print(self.mostImperativeIndex)
-
-    def point_away_from_large(self):
-        #print('point_away_from_large')
-        x = -1 * int(self.nearest[0].location[0] - self.location[0])
-        y = int(self.nearest[0].location[1] - self.location[1])
-
-        if (x == 0):
-            if (y < 0):
-                # print("y<0")
-                targetTheta = 270
-            else:
-                # print("y>0")
-                targetTheta = 90
-        else:
-            ratio = y / x
-            targetTheta = math.atan(ratio)
-            targetTheta = int((targetTheta * 180) / math.pi)
-
-        # print(x,'\t',y)
-        # print(targetTheta)
-        if (x < 0):
-            targetTheta = targetTheta + 180
-
-        if (targetTheta < 0):
-            targetTheta = targetTheta + 360
-        # print(targetTheta)
-        # print('frame end\n')
-        #self.speed +=0.1
-        if self.speed > 12:
-            self.speed = 12
-        self.heading = targetTheta - self.heading / randint(180, 360)
-
-    def point_at_food(self):
-        #print('name: ',self.nearest[1].name)
-        x = int(self.nearest[1].location[0] - self.location[0])
-        y = -1 * int(self.nearest[1].location[1] - self.location[1])
-
-        if (x == 0):
-            if (y < 0):
-                #print("y<0")
-                targetTheta = 270
-            else:
-                #print("y>0")
-                targetTheta = 90
-            return
-        else:
-            ratio = y / x
-            targetTheta = math.atan(ratio)
-            targetTheta = int((targetTheta * 180) / math.pi)
-
-        #print(self.heading,'\t',x,'\t',y)
-        #print(targetTheta)
-        if (x < 0):
-            targetTheta = targetTheta + 180
-
-        if (targetTheta < 0):
-            targetTheta = targetTheta + 360
-        #print(targetTheta)
-        #print('frame end\n')
-
-        self.heading = targetTheta
-        #print(self.name,'\t',x, ' \t', y,'\t',self.heading)
-
-    def point_at_small(self):
-        #print('point_at_small')
-        if self.size > self.nearest[2].size:
-            self.point_at_food()
-            return
-        x = int(self.nearest[2].location[0] - self.location[0])
-        y = -1 * int(self.nearest[2].location[1] - self.location[1])
-
-        if (x == 0):
-            if (y < 0):
-                # print("y<0")
-                targetTheta = 270
-            else:
-                # print("y>0")
-                targetTheta = 90
-        else:
-            ratio = y / x
-            targetTheta = math.atan(ratio)
-            targetTheta = int((targetTheta * 180) / math.pi)
-
-        # print(x,'\t',y)
-        # print(targetTheta)
-        if (x < 0):
-            targetTheta = targetTheta + 180
-
-        if (targetTheta < 0):
-            targetTheta = targetTheta + 360
-        # print(targetTheta)
-        # print('frame end\n')
-
-        self.heading = targetTheta
-
-    def point_with_friend(self):
-        #print('point_with_friend')
-        x = int(self.nearest[3].location[0] - self.location[0])
-        y = -1*int(self.nearest[3].location[1] - self.location[1])
-
-        if (x == 0):
-            if (y < 0):
-                # print("y<0")
-                targetTheta = 270
-            else:
-                # print("y>0")
-                targetTheta = 90
-        else:
-            ratio = y / x
-            targetTheta = math.atan(ratio)
-            targetTheta = int((targetTheta * 180) / math.pi)
-
-        # print(x,'\t',y)
-        # print(targetTheta)
-        if (x < 0):
-            targetTheta = targetTheta + 180
-
-        if (targetTheta < 0):
-            targetTheta = targetTheta + 360
-        # print(targetTheta)
-        # print('frame end\n')
-
-        self.heading = targetTheta#self.heading - targetTheta/randint(36,72)
-
-    def point_heading(self):
-        if self.mostImperativeIndex == 0:
-            self.point_away_from_large()
-        elif self.mostImperativeIndex == 1:
-            self.point_at_food()
-        elif self.mostImperativeIndex == 2:
-            self.point_at_small()
-        elif self.mostImperativeIndex == 3:
-            self.point_with_friend()
-        else:
-            #print('critter[',self.name,'] has no target')
-            self.target = self.location
-            self.heading += (randint(0,30) - 15)
-
-    def decide_action(self, species, foods):
-        '''
-        decide action based on knowledge of species and food
-        :param speciesLst: list of species
-        :param foodLst: list of food
-        :return: none
-        '''
-        #print('start action:     ',self.location)
+    def update_nearest(self,species,foods):
         if self.nearest_empty:
             self.init_nearest(species,foods)
 
@@ -335,17 +127,17 @@ class Critter:
                             self.compare_near_large(individual)
                         elif individual.size < self.size:
                             self.compare_near_small(individual)
-        #print('start imperative: ', self.location)
-        self.update_imperative()
-        #print('  end imperative: ', self.location)
 
-        self.point_heading()
-        #print('  end action:     ', self.location)
-
-
-        #print(self.heading,' \t',self.location[0],'\t',self.location[1],'\t',self.mostImperativeIndex)
-
-        #self.heading = 0 # to the left for demo
+    def decide_action(self, species, foods):
+        '''
+        decide action based on knowledge of species and food
+        :param speciesLst: list of species
+        :param foodLst: list of food
+        :return: none
+        '''
+        self.update_nearest(species,foods)
+        AI.update_imperative(self)
+        AI.point_heading(self)
 
     def move(self):
 
