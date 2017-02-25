@@ -9,6 +9,7 @@ class FoodLst:
     def remove(self, food):
         self.foodLst.remove(food)
         food = self.randLocation(food)
+        food.alive = True
         self.foodLst.append(food)
 
     def add(self, food):
@@ -17,6 +18,7 @@ class FoodLst:
     def randLocation(self, food):
         location = [randint(50, 1150), randint(50, 550)]
         food.location = location
+        food.target = location
         return food
 
 
@@ -34,7 +36,5 @@ class Food:
         self.typeName = -1
 
     def consume(self):
-        if randint(0,100) < 20:
-            self.alive = False
-        #print(self.location[0],'\t',self.location[1])
+        self.alive = False
         return self.foodAmount
