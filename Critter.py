@@ -345,7 +345,7 @@ class Critter:
 
         #self.heading = 0 # to the left for demo
 
-    def move(self, frameTime):
+    def move(self):
 
 
         if self.location[0] + self.size > 1195:
@@ -371,8 +371,8 @@ class Critter:
         correctTheta = self.heading % 360
         theta = (correctTheta * 2 * math.pi) / 360
 
-        self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size * dampening) * math.cos(theta))
-        self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size * dampening) * math.sin(theta))
+        self.location[0] = int(self.location[0] + (self.frame_time * self.speed * self.size * dampening) * math.cos(theta))
+        self.location[1] = int(self.location[1] - (self.frame_time * self.speed * self.size * dampening) * math.sin(theta))
 
         #print(self.location[0],'\t',self.location[1])
 

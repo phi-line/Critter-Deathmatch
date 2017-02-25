@@ -10,7 +10,7 @@ from Food import Food
 from Food import FoodLst
 from Squad import Squad
 
-NUM_SPECIES = 1
+NUM_SPECIES = 2
 STARTING_POPULATION = 1
 FRAME_TIME = 0.02
 WORLD_X_SIZE = 1200 #canvas_x
@@ -71,7 +71,7 @@ def logic(species, foods):
         for individual in specie.individuals:
             if individual.alive:
                 individual.decide_action(species,foods)
-                individual.move(FRAME_TIME)
+                individual.move()
                 individual.check_state(species,foods)
                 Squad.join(individual)
                 #if individual.needs_update:
