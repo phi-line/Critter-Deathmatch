@@ -1,6 +1,6 @@
 import math
 from random import randint
-import AI
+import Food
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -31,7 +31,7 @@ class Critter:
         self.needs_update = kwargs.pop('needs_update',True)                   # needs to be updated because its to old, to big, in combat
         self.whoTouching = kwargs.pop('whoTouching',[])                       # a 2 element list of the species id and individual id of whomever this is touching
         self.gen = kwargs.pop('gen',0)                        #0 # what generation this is
-        self.birthFoodAmount = kwargs.pop('foodAmount', 1000)
+        self.birthFoodAmount = kwargs.pop('foodAmount', 1500)
         # list of indexes for nearest objects:
         # large,food,small,friend
         self.nearest = []
@@ -62,7 +62,8 @@ class Critter:
         self.nearest.append(self)
         self.nearest.append(self)
 
-        self.nearest[1] = foods.foodLst[0]
+        if(len(foods.foodLst) != 0):
+            self.nearest[1] = foods.foodLst[0]
 
         spacesFilled = 1
 
@@ -108,51 +109,14 @@ class Critter:
         if (new < cur or not self.nearest[3].alive or self.nearest[3].name == self.name):
             self.nearest[3] = other
 
-
-
-    def update_nearest(self,species,foods):
-        if self.nearest_empty:
-            self.init_nearest(species,foods)
-
-        for food in foods.foodLst:
-            self.compare_near_food(food)
-
-        for specie in species:
-            for individual in specie.individuals:
-                if individual.alive:
-                    if (individual.typeName == self.typeName and individual.name != self.name):
-                        self.compare_near_friend(individual)
-                    else:
-                        if individual.size > self.size:
-                            self.compare_near_large(individual)
-                        elif individual.size < self.size:
-                            self.compare_near_small(individual)
-
-    def decide_action(self, species, foods):
-        '''
-        decide action based on knowledge of species and food
-        :param speciesLst: list of species
-        :param foodLst: list of food
-        :return: none
-        '''
-        self.update_nearest(species,foods)
-        AI.update_imperative(self)
-        AI.point_heading(self)
-
     def move(self):
-
-
         if self.location[0] + self.size > self.world_x_max*0.95:
-            # perform vector reflection from vector2.right
             self.heading = randint(110, 250)
         elif self.location[0] - self.size < self.world_x_min*0.95:
-            # perform vector reflection from vector2.left
             self.heading = randint(110, 250) + 180
         elif self.location[1] + self.size > self.world_y_max*0.95:
-            # perform vector reflection from vector2.down
             self.heading = randint(20, 160)
         elif self.location[1] - self.size < self.world_y_min*0.95:
-            # perform vector reflection from vector2.up
             self.heading = randint(200, 340)
 
         antiHeading = (self.heading + 180) % 360
@@ -160,15 +124,12 @@ class Critter:
         dampening = (newHeadingOffset / 180)
         if dampening > 1:
             dampening = 1
-        #print(dampening)
 
         correctTheta = self.heading % 360
         theta = (correctTheta * 2 * math.pi) / 360
 
         self.location[0] = int(self.location[0] + (self.frame_time * self.speed * self.size * dampening) * math.cos(theta))
         self.location[1] = int(self.location[1] - (self.frame_time * self.speed * self.size * dampening) * math.sin(theta))
-
-        #print(self.location[0],'\t',self.location[1])
 
         self.prevHeading = self.heading
 
@@ -202,7 +163,7 @@ class Critter:
         self.size = (self.foodAmount) / self.scaleModifier
         #self.speed = self.startSpeed * (self.birthFoodAmount / (self.foodAmount))
 
-        if self.foodAmount <= self.birthFoodAmount*.25:
+        if (self.foodAmount <= self.birthFoodAmount*.25 or self.health <= 0):
             self.alive = False
 
     def update(self, speciesLst, foodLst):
@@ -221,7 +182,7 @@ class Critter:
             if (self.size > large.size):
                 self.apply_damage(large)
 
-        elif( Critter.is_collided(self.location, food.location,self.size, food.size) and food.alive):
+        elif(Critter.is_collided(self.location, food.location,self.size, food.size) and food.alive and (food != self)):
             self.needs_update = True
             self.foodAmount += food.consume()
 
@@ -232,11 +193,6 @@ class Critter:
         elif (Critter.is_collided(self.location, friend.location,self.size, friend.size) and self.typeName != friend.typeName and self.alive and friend.alive):
             if (self.size > friend.size):
                 self.apply_damage(friend)
-
-        if (self.health <= 0):
-            self.alive = False
-
-        self.size = self.foodAmount / self.scaleModifier
 
     def apply_damage(self, other):
         self.DPS = int(self.health*self.hunt_scalar*10)
@@ -253,7 +209,7 @@ class Critter:
         rgb = self.hex_to_rgb(self.color)
         rgb = list(rgb)
         for i in range(0, len(rgb)):
-            rgb[i] = (self.health/100)*255
+            rgb[i] *= (self.health/int((2*self.birthFoodAmount)/self.scaleModifier))
             rgb[i] = int(rgb[i])
             if rgb[i] >= 255:
                 rgb[i] = 255

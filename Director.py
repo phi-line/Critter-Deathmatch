@@ -3,6 +3,7 @@ import time
 import tkinter as tk
 from random import randint, seed
 
+import AI
 from GUI import GUI
 from Specie import Specie
 from Critter import Critter
@@ -18,7 +19,7 @@ WORLD_Y_SIZE = 600  #canvas_y
 WINDOW_X_SIZE = 1200
 WINDOW_Y_SIZE = 600
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 20
+FOOD_DENSITY = 1
 FOOD_STRENGTH = 200
 
 display_x_min = 0
@@ -70,7 +71,7 @@ def logic(species, foods):
         specie.determine_birth()
         for individual in specie.individuals:
             if individual.alive:
-                individual.decide_action(species,foods)
+                AI.decide_action(individual,species,foods)
                 individual.move()
                 individual.check_state(species,foods)
                 Squad.join(individual)

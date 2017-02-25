@@ -8,7 +8,7 @@ class Specie:
     FOOD_MIN, FOOD_MAX = 0.1, 1
     TURN_SPEED_MIN, TURN_SPEED_MAX = 30, 45
     DETECT_MIN, DETECT_MAX = 1, 5
-    SCALAR_MIN, SCALAR_MAX = 0, 2.0
+    SCALAR_MIN, SCALAR_MAX = 0.5, 1.5
 
     def __init__(self, *args, **kwargs):
         self.speed  = kwargs.pop('speed', 1) # starts as 1 (size per second)
