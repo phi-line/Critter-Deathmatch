@@ -25,6 +25,7 @@ def main():
     gui = GUI(tk.Tk(),CANVAS_X,CANVAS_Y)
     species = []
     foods = create_foods()
+    print(foods)
 
     for i in range(0,NUM_SPECIES):
         #newSpecie = Specie(startingPopulation=STARTING_POPULATION,typeName="species" + str(i))
@@ -74,6 +75,8 @@ def draw(gui, species, foods):
     for food in foods:
         if(food.alive):
             gui.add_object_to_draw(food)
+        else:
+            foods.remove(food)
 
     for specie in species:
         for individual in specie.individuals:
