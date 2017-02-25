@@ -108,7 +108,8 @@ class Specie:
                                  heading=dir,
                                  color=i.color,
                                  speed=9,#i.speed,
-                                 typeName=self.typeName)
+                                 typeName=self.typeName,
+                                 name=len(self.individuals) + 1)
                 muDir = 270#randrange(180, 360)
                 childB = Critter(foodAmount=(i.foodAmount/2.2),
                                  #size=(i.size/2),
@@ -116,7 +117,8 @@ class Specie:
                                  heading=muDir,
                                  color=i.color,
                                  speed=9,#i.speed,
-                                 typeName=self.typeName)
+                                 typeName=self.typeName,
+                                 name=len(self.individuals) + 1)
                 i.alive = False
                 self.individuals.remove(i)
                 self.individuals.append(childA)

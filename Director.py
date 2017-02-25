@@ -8,6 +8,7 @@ from Specie import Specie
 from Critter import Critter
 from Food import Food
 from Food import FoodLst
+from Squad import Squad
 
 NUM_SPECIES = 1
 STARTING_POPULATION = 1
@@ -72,6 +73,7 @@ def logic(species, foods):
                 individual.decide_action(species,foods)
                 individual.move(FRAME_TIME)
                 individual.check_state(species,foods)
+                Squad.join(individual)
                 #if individual.needs_update:
                 #   individualsToUpdate.append(individual)
 
@@ -79,6 +81,9 @@ def logic(species, foods):
         for individual in specie.individuals:
             if individual.alive:
                 individual.update(frameTime=FRAME_TIME,speciesLst=species, foodLst=foods)
+
+    for squad in Squad.squadLst:
+        squad.update()
 
 def draw(screen_location, gui, species, foods):
     gui.clear()
@@ -94,6 +99,20 @@ def draw(screen_location, gui, species, foods):
         for individual in specie.individuals:
             if(individual.alive):
                 gui.add_object_to_draw(individual)
+
+    for squad in Squad.squadLst:
+        gui.add_object_to_draw(squad)
+        center = squad.center()
+        class Obj:
+            pass
+        obj = Obj()
+        obj.heading = 0
+        obj.color = 'red'
+        obj.location = center
+        obj.size = 5
+        for m in squad.members:
+            obj.target = m.location
+            gui.debug_overlay(obj)
 
     gui.draw()
 
