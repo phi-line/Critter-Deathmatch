@@ -359,7 +359,7 @@ class Critter:
         self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size * dampening) * math.cos(theta))
         self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size * dampening) * math.sin(theta))
 
-        print(self.location[0],'\t',self.location[1])
+        #print(self.location[0],'\t',self.location[1])
 
         self.prevHeading = self.heading
 
