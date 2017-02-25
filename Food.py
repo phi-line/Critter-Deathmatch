@@ -34,7 +34,5 @@ class Food:
         self.typeName = -1
 
     def consume(self):
-        if randint(0,100) < 20:
-            self.alive = False
-        #print(self.location[0],'\t',self.location[1])
+        self.alive = False
         return self.foodAmount
