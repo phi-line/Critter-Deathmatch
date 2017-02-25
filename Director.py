@@ -9,7 +9,7 @@ from Critter import Critter
 from Food import Food
 from Food import FoodLst
 
-NUM_SPECIES = 3
+NUM_SPECIES = 5
 STARTING_POPULATION = 1
 FRAME_TIME = 0.02
 WORLD_X_SIZE = 1200 #canvas_x

@@ -9,6 +9,7 @@ class FoodLst:
     def remove(self, food):
         self.foodLst.remove(food)
         food = self.randLocation(food)
+        food.alive = True
         self.foodLst.append(food)
 
     def add(self, food):
@@ -17,6 +18,7 @@ class FoodLst:
     def randLocation(self, food):
         location = [randint(50, 1150), randint(50, 550)]
         food.location = location
+        food.target = location
         return food
 
 

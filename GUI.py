@@ -61,8 +61,8 @@ class GUI(tk.Canvas):
         y2 = self.pixel_y_max - self.map_y_coordinate(object.target[1])
 
         theta = ((object.heading % 360) * 2 * math.pi) / 360
-        x3 = x1 + 50*math.cos(theta)
-        y3 = y1 + 50*math.sin(theta)
+        x3 = int(x1 + 1.5*object.size*math.cos(theta))
+        y3 = int(y1 + 1.5*object.size*math.sin(theta))
 
         if (x2 != 0 and y2 != 0):
             self.create_line(x1,y1,x2,y2, width=2, fill=object.color)
