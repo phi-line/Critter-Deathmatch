@@ -4,6 +4,10 @@ from random import randint
 class Critter:
     def __init__(self, *args,**kwargs):
         self.scaleModifier = 100
+        self.flee_scalar = kwargs.pop('flee_scalar', 1.5)
+        self.food_scalar = kwargs.pop('food_scalar', 1.3)
+        self.hunt_scalar = kwargs.pop('hunt_scalar', 1.0)
+        self.flock_scalar = kwargs.pop('flock_scalar', 0.1)
 
         self.foodAmount = kwargs.pop('foodAmount', 1500)                      #starting health
         self.size = kwargs.pop('size',self.foodAmount/self.scaleModifier)   #diameter in pixels
@@ -104,10 +108,10 @@ class Critter:
         small = -1
         friend = -1
 
-        largeMod = 1    #flee
-        foodMod = 1     #food
-        smallMod = 1    #hunt
-        friendMod = 1   #flock
+        largeMod = self.flee_scalar    #flee
+        foodMod = self.food_scalar     #food
+        smallMod = self.hunt_scalar    #hunt
+        friendMod = self.flock_scalar  #flock
 
         self.mostImperativeIndex = -1
 
