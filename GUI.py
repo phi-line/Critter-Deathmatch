@@ -23,10 +23,12 @@ class GUI(tk.Canvas):
         r = object.size
         c = object.color
         #print('DRAW: ',x,'\t',y)
-        if(object.target[0] != 300 and object.target[1] != 300):
+
+        if(object.target[0] != 0 and object.target[1] != 0):
             self.create_line(x,y,object.target[0],self.win_y - object.target[1],width=2,fill=object.color)
         else:
             self.create_line(x, y, object.target[0], self.win_y - object.target[1], width=2, fill='#999999')
+
         self.create_circle(x,y,r,c,outline='#000000',width=2)
 
     def draw(self):
