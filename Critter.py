@@ -11,8 +11,8 @@ class Critter:
         self.flock_scalar = kwargs.pop('flock_scalar', 1.0)
 
         self.foodAmount = kwargs.pop('foodAmount', 1500)                      #starting health
-        self.health = kwargs.pop('health', int(self.foodAmount/10))
-        self.DPS = kwargs.pop('DPS', int(self.health/self.hunt_scalar))
+        self.health = kwargs.pop('health', int((2*self.foodAmount)/self.scaleModifier))
+        self.DPS = kwargs.pop('DPS', int(self.health*self.hunt_scalar))
 
         self.size = kwargs.pop('size',self.foodAmount/self.scaleModifier)   #diameter in pixels
         self.foodDecayRate = kwargs.pop('foodDecayRate', 0)       #10 #food lost per second
@@ -429,9 +429,9 @@ class Critter:
                     if(self.size > individual.size):
                         # apply damage once from the larger to smaller and then smaller to larger
                         self.apply_damage(individual)
-                        self.update_color()
-                        individual.update_color()
                         pass
+                if (self.health <= 0):
+                    self.alive = False
 
                     # if(self.size > individual.size):
                     #     individual.alive = False # eating target
@@ -441,9 +441,6 @@ class Critter:
                     #     #individual.foodAmount += self.foodAmount
                     # else:
                     #     pass
-
-                if (self.health <= 0):
-                    self.alive = False
 
         for food in foodLst.foodLst:
             # check if collided with food
@@ -458,8 +455,15 @@ class Critter:
         self.size = self.foodAmount / self.scaleModifier
 
     def apply_damage(self, other):
+        self.DPS = int(self.health*self.hunt_scalar*10)
+        other.DPS = int(other.health*other.hunt_scalar*10)
+        # print(other.DPS, self.health)
         self.health -= float(other.DPS)*self.frame_time
         other.health -= float(self.DPS)*self.frame_time
+        # self.update_color()
+        # other.update_color()
+        # print(other.DPS, self.health)
+        # print ("\n")
 
     def update_color(self):
         rgb = self.hex_to_rgb(self.color)
