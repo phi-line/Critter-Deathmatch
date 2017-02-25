@@ -162,9 +162,10 @@ class Critter:
 
             if not self.nearest[self.mostImperativeIndex].alive:
                 self.mostImperativeIndex = 1
-
-            self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
-            self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
+            print('start target:  ', self.location)
+            #self.target[0] = self.nearest[self.mostImperativeIndex].location[0]
+            #self.target[1] = self.nearest[self.mostImperativeIndex].location[1]
+            print('  end target:  ', self.location)
         else:
             self.mostImperativeIndex = -1
 
@@ -314,6 +315,7 @@ class Critter:
         :param foodLst: list of food
         :return: none
         '''
+        #print('start action:     ',self.location)
         if self.nearest_empty:
             self.init_nearest(species,foods)
 
@@ -330,10 +332,12 @@ class Critter:
                             self.compare_near_large(individual)
                         elif individual.size < self.size:
                             self.compare_near_small(individual)
-
+        #print('start imperative: ', self.location)
         self.update_imperative()
+        #print('  end imperative: ', self.location)
 
         self.point_heading()
+        #print('  end action:     ', self.location)
 
 
         #print(self.heading,' \t',self.location[0],'\t',self.location[1],'\t',self.mostImperativeIndex)
