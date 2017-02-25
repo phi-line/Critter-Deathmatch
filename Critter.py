@@ -48,7 +48,7 @@ class Critter:
         self.nearest.append(Critter())
         self.nearest.append(Critter())
 
-        self.nearest[1] = foods[0]
+        self.nearest[1] = foods.foodLst[0]
 
         spacesFilled = 1
 
@@ -302,7 +302,7 @@ class Critter:
         if self.nearest_empty:
             self.init_nearest(species,foods)
 
-        for food in foods:
+        for food in foods.foodLst:
             self.compare_near_food(food)
 
         for specie in species:
@@ -423,7 +423,7 @@ class Critter:
                         #individual.foodAmount += self.foodAmount
                     else:
                         pass
-        for food in foodLst:
+        for food in foodLst.foodLst:
             # check if collided with food
             if( Critter.is_collided(self.location, food.location,
                                     self.size, food.size) and
@@ -431,7 +431,7 @@ class Critter:
                 #print("Hit food")
                 self.needs_update = True
                 self.foodAmount += food.consume()
-                #foodLst.remove(food)
+                foodLst.remove(food)
 
         self.size = self.foodAmount / self.scaleModifier
 
