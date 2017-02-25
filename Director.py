@@ -7,6 +7,7 @@ from GUI import GUI
 from Specie import Specie
 from Critter import Critter
 from Food import Food
+from Food import FoodLst
 
 NUM_SPECIES = 5
 STARTING_POPULATION = 1
@@ -34,12 +35,13 @@ def main():
 def create_foods():
     #numFood = int(WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY)
     numFood = FOOD_DENSITY
-    foods = []
+    foods = FoodLst(FOOD_STRENGTH)
     for i in range(0,numFood):
         x = randint(50,WORLD_X_SIZE-50)
         y = randint(50,WORLD_Y_SIZE-50)
         newFood = Food(FOOD_STRENGTH,i,[x,y])
-        foods.append(newFood)
+        foods.add(newFood)
+        #foods.append(newFood)
     return foods
 
 def main_loop(gui,species,foods):
@@ -69,7 +71,7 @@ def logic(species, foods):
 def draw(gui, species, foods):
     gui.clear()
 
-    for food in foods:
+    for food in foods.foodLst:
         if(food.alive):
             gui.add_object_to_draw(food)
 
