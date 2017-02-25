@@ -460,8 +460,8 @@ class Critter:
         # print(other.DPS, self.health)
         self.health -= float(other.DPS)*self.frame_time
         other.health -= float(self.DPS)*self.frame_time
-        # self.update_color()
-        # other.update_color()
+        self.update_color()
+        other.update_color()
         # print(other.DPS, self.health)
         # print ("\n")
 
@@ -469,7 +469,7 @@ class Critter:
         rgb = self.hex_to_rgb(self.color)
         rgb = list(rgb)
         for i in range(0, len(rgb)):
-            rgb[i] *= self.birthFoodAmount/(self.health*10)
+            rgb[i] = (self.health/100)*255
             rgb[i] = int(rgb[i])
             if rgb[i] >= 255:
                 rgb[i] = 255
