@@ -466,6 +466,7 @@ class Critter:
         rgb = list(rgb)
         for i in range(0, len(rgb)):
             rgb[i] *= self.birthFoodAmount/(self.health*10)
+            rgb[i] = int(rgb[i])
             if rgb[i] >= 255:
                 rgb[i] = 255
             if rgb[i] <= 0:
