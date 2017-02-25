@@ -6,9 +6,9 @@ class GUI(tk.Canvas):
         When creating an instance of this class, pass tkinter.Tk() to it like this:
         gui = GUI(tkinter.Tk()
     '''
-    def __init__(self,master, world_x, world_y, *args, **kwargs):
-        self.win_x = world_x
-        self.win_y = world_y
+    def __init__(self,master, canvas_x, canvas_y, *args, **kwargs):
+        self.win_x = canvas_x
+        self.win_y = canvas_y
 
         tk.Canvas.__init__(self, master=master, width=self.win_x, height=self.win_y, borderwidth=0, highlightthickness=0, bg="#888888")
         self.pack()
@@ -19,14 +19,16 @@ class GUI(tk.Canvas):
 
     def add_object_to_draw(self,object):
         x = int(object.location[0])
-        y = int(object.location[1])
+        y = self.win_y - int(object.location[1])
         r = object.size
         c = object.color
         #print('DRAW: ',x,'\t',y)
-        if(object.target[0] != 300 and object.target[1] != 300):
-            self.create_line(x,y,object.target[0],object.target[1],width=2,fill=object.color)
+
+        if(object.target[0] != 0 and object.target[1] != 0):
+            self.create_line(x,y,object.target[0],self.win_y - object.target[1],width=2,fill=object.color)
         else:
-            self.create_line(x, y, object.target[0], object.target[1], width=2, fill='#999999')
+            self.create_line(x, y, object.target[0], self.win_y - object.target[1], width=2, fill='#999999')
+
         self.create_circle(x,y,r,c,outline='#000000',width=2)
 
     def draw(self):

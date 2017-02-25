@@ -53,7 +53,7 @@ class Critter:
         self.nearest.append(Critter())
         self.nearest.append(Critter())
 
-        self.nearest[1] = foods[0]
+        self.nearest[1] = foods.foodLst[0]
 
         spacesFilled = 1
 
@@ -114,14 +114,15 @@ class Critter:
         smallMod = self.hunt_scalar    #hunt
         friendMod = self.flock_scalar  #flock
 
-        self.mostImperativeIndex = 1
+        self.mostImperativeIndex = -1
 
         if self.nearest[0].alive:
             large   = 1.0 - (self.distance(self.nearest[0])/(self.detectDistance*self.size))
             large   *= largeMod
 
         if self.nearest[1].alive:
-            food    = 2.0 - ((self.foodAmount/self.birthFoodAmount) + (self.distance(self.nearest[1])/self.detectDistance*self.size))
+            food    = 1.0 - (self.distance(self.nearest[1])/(self.detectDistance*self.size))
+            food    *= abs(1.0 - (self.foodAmount/(self.birthFoodAmount*self.divideSize)))
             food    *= foodMod
 
         if self.nearest[2].alive:
@@ -196,7 +197,7 @@ class Critter:
     def point_at_food(self):
         #print('name: ',self.nearest[1].name)
         x = int(self.nearest[1].location[0] - self.location[0])
-        y = -1*int(self.nearest[1].location[1] - self.location[1])
+        y = -1 * int(self.nearest[1].location[1] - self.location[1])
 
         if (x == 0):
             if (y < 0):
@@ -307,7 +308,7 @@ class Critter:
         if self.nearest_empty:
             self.init_nearest(species,foods)
 
-        for food in foods:
+        for food in foods.foodLst:
             self.compare_near_food(food)
 
         for specie in species:
@@ -358,6 +359,8 @@ class Critter:
 
         self.location[0] = int(self.location[0] + (frameTime * self.speed * self.size * dampening) * math.cos(theta))
         self.location[1] = int(self.location[1] - (frameTime * self.speed * self.size * dampening) * math.sin(theta))
+
+        #print(self.location[0],'\t',self.location[1])
 
         self.prevHeading = self.heading
 
@@ -428,7 +431,7 @@ class Critter:
                         #individual.foodAmount += self.foodAmount
                     else:
                         pass
-        for food in foodLst:
+        for food in foodLst.foodLst:
             # check if collided with food
             if( Critter.is_collided(self.location, food.location,
                                     self.size, food.size) and
