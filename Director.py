@@ -14,16 +14,25 @@ STARTING_POPULATION = 1
 FRAME_TIME = 0.02
 WORLD_X_SIZE = 1200 #canvas_x
 WORLD_Y_SIZE = 600  #canvas_y
-CANVAS_X = 1200
-CANVAS_Y = 600
+WINDOW_X_SIZE = 1200
+WINDOW_Y_SIZE = 600
 #FOOD_DENSITY = 0.000075
 FOOD_DENSITY = 75
-FOOD_STRENGTH = 400
+FOOD_STRENGTH = 200
+
+display_x_min = 0
+display_y_min = 0
+display_x_max = WORLD_X_SIZE
+display_y_max = WORLD_Y_SIZE
 
 def main():
     seed()
 
-    gui = GUI(tk.Tk(),CANVAS_X,CANVAS_Y)
+    screen_location = [display_x_min,display_y_min,display_x_max,display_y_max]
+
+    gui = GUI(tk.Tk(),WINDOW_X_SIZE,WINDOW_Y_SIZE)
+    gui.place_window(screen_location[0],screen_location[1],screen_location[2],screen_location[3])
+
     species = []
     foods = create_foods()
     print(foods)
@@ -33,7 +42,7 @@ def main():
         newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i, frama_time=FRAME_TIME)
         species.append(newSpecie)
 
-    main_loop(gui,species,foods)
+    main_loop(screen_location,gui,species,foods)
 
 def create_foods():
     #numFood = int(WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY)
@@ -47,10 +56,10 @@ def create_foods():
         #foods.append(newFood)
     return foods
 
-def main_loop(gui,species,foods):
+def main_loop(screen_location, gui,species,foods):
     while True:
         logic(species,foods)
-        draw(gui,species,foods)
+        draw(screen_location,gui,species,foods)
         time.sleep(FRAME_TIME)
 
 def logic(species, foods):
@@ -71,8 +80,9 @@ def logic(species, foods):
             if individual.alive:
                 individual.update(frameTime=FRAME_TIME,speciesLst=species, foodLst=foods)
 
-def draw(gui, species, foods):
+def draw(screen_location, gui, species, foods):
     gui.clear()
+    gui.place_window(screen_location[0], screen_location[1], screen_location[2], screen_location[3])
 
     for food in foods.foodLst:
         if(food.alive):

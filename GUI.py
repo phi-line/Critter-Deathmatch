@@ -6,19 +6,59 @@ class GUI(tk.Canvas):
         When creating an instance of this class, pass tkinter.Tk() to it like this:
         gui = GUI(tkinter.Tk()
     '''
-    def __init__(self,master, canvas_x, canvas_y, *args, **kwargs):
-        self.win_x = canvas_x
-        self.win_y = canvas_y
+    def __init__(self, master, WINDOW_X_SIZE, WINDOW_Y_SIZE, *args, **kwargs):
+        self.win_x_size = WINDOW_X_SIZE
+        self.win_y_size = WINDOW_Y_SIZE
 
-        tk.Canvas.__init__(self, master=master, width=self.win_x, height=self.win_y, borderwidth=0, highlightthickness=0, bg="#888888")
+        self.resolution = 1
+
+        self.display_x_min = 0
+        self.display_y_min = 0
+        self.display_x_max = 0
+        self.display_y_max = 0
+
+        self.pixel_x_min = 0
+        self.pixel_y_min = 0
+        self.pixel_x_max = self.win_x_size
+        self.pixel_y_max = self.win_y_size
+
+        tk.Canvas.__init__(self, master=master, width=WINDOW_X_SIZE, height=WINDOW_Y_SIZE, borderwidth=0, highlightthickness=0, bg="#888888")
         self.pack()
 
-    def debug_overlay(self,object):
-        x1 = object.location[0]
-        y1 = self.win_y - int(object.location[1])
+    def map_x_coordinate(self, worldX):
+        x = 0
+        if(worldX < self.display_x_min):
+            x = -1
+        elif(worldX > self.display_x_max):
+            x = self.display_x_max + 1
+        else:
+            x = ((self.display_x_min + worldX)/self.display_x_max)*self.pixel_x_max
+        return int(x)
 
-        x2 = object.target[0]
-        y2 = self.win_y - object.target[1]
+    def map_y_coordinate(self, worldY):
+        y = 0
+        if (worldY < self.display_y_min):
+            y = -1
+        elif (worldY > self.display_y_max):
+            y = self.display_y_max + 1
+        else:
+            y = ((self.display_y_min + worldY) / self.display_y_max) * self.pixel_y_max
+        return int(y)
+
+    def place_window(self, display_x_min, display_y_min, display_x_max, display_y_max,):
+        self.resolution = 0
+
+        self.display_x_min = display_x_min
+        self.display_y_min = display_y_min
+        self.display_x_max = display_x_max
+        self.display_y_max = display_y_max
+
+    def debug_overlay(self,object):
+        x1 = self.map_x_coordinate(object.location[0])
+        y1 = self.pixel_y_max - self.map_y_coordinate(object.location[1])
+
+        x2 = self.map_x_coordinate(object.target[0])
+        y2 = self.pixel_y_max - self.map_y_coordinate(object.target[1])
 
         theta = ((object.heading % 360) * 2 * math.pi) / 360
         x3 = x1 + 50*math.cos(theta)
@@ -37,13 +77,16 @@ class GUI(tk.Canvas):
         return self.create_oval(x - r, y - r, x + r, y + r, fill=color, **kwargs)
 
     def add_object_to_draw(self,object):
-        x = int(object.location[0])
-        y = self.win_y - int(object.location[1])
+        x = self.map_x_coordinate(object.location[0])
+        y = self.pixel_y_max - self.map_y_coordinate(object.location[1])
         r = object.size
         c = object.color
         #print('DRAW: ',x,'\t',y)
-        self.debug_overlay(object)
-        self.create_circle(x,y,r,c,outline='#000000',width=2)
+
+        if(x >= self.display_x_min and x <= self.display_x_max):
+            if (y >= self.display_y_min and y <= self.display_y_max):
+                self.debug_overlay(object)
+                self.create_circle(x,y,r,c,outline='#000000',width=2)
 
     def draw(self):
         tk.Canvas.update_idletasks(self)
