@@ -53,7 +53,7 @@ class Specie:
         for i in range(0, self.startingPopulation):
             this_critter = Critter( location=[randint(50,1150),randint(50,550)],
                                    heading=0, name=i,foodAmount=1500,
-                                    typeName=self.typeName,speed=8,startSpeed=1,foodDecayRate=0.05,
+                                    typeName=self.typeName,speed=8,startSpeed=1,foodDecayRate=0.1,
                                     color=self.color)
             #print(this_critter.location[0],'\t',this_critter.location[1])
             self.individuals.append(this_critter)
