@@ -458,12 +458,17 @@ class Critter:
         self.size = self.foodAmount / self.scaleModifier
 
     def apply_damage(self, other):
-        self.health -= float(other.DPS)/self.frame_time
-        other.health -= float(self.DPS)/self.frame_time
+        self.health -= float(other.DPS)*self.frame_time
+        other.health -= float(self.DPS)*self.frame_time
 
     def update_color(self):
-        rgb = self.colorscale(self.color, self.birthFoodAmount/(self.health*10))
-        self.color = rgb_to_hsv(rgb[0],rgb[1],rgb[2])
+        rgb = self.hex_to_rgb(self.color)
+        rgb = list(rgb)
+        for i in range(0, len(rgb)):
+            rgb[i] *= self.birthFoodAmount/(self.health*10)
+            if rgb[i] >= 255:
+                rgb[i] = 255
+        self.color = self.rgb_to_hex(rgb[0],rgb[1],rgb[2])
 
     @staticmethod
     def color_scale(hexstr, scalefactor):
