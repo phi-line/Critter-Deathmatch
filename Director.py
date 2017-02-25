@@ -17,7 +17,7 @@ WORLD_Y_SIZE = 600  #canvas_y
 WINDOW_X_SIZE = 1200
 WINDOW_Y_SIZE = 600
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 1
+FOOD_DENSITY = 75
 FOOD_STRENGTH = 200
 
 display_x_min = 0
@@ -82,8 +82,6 @@ def logic(species, foods):
 
 def draw(screen_location, gui, species, foods):
     gui.clear()
-
-    screen_location[0] += 1
     gui.place_window(screen_location[0], screen_location[1], screen_location[2], screen_location[3])
 
     for food in foods.foodLst:
