@@ -11,11 +11,11 @@ from Food import Food
 from Food import FoodLst
 from Squad import Squad
 
-NUM_SPECIES = 10
+NUM_SPECIES = 5
 STARTING_POPULATION = 1
 
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 75
+FOOD_DENSITY = 20
 FOOD_STRENGTH = 200
 
 FRAME_TIME = 0.02
@@ -23,8 +23,8 @@ FRAME_TIME = 0.02
 WINDOW_X_SIZE = 1200
 WINDOW_Y_SIZE = 600
 
-WORLD_X_MIN = 0
-WORLD_Y_MIN = 0
+WORLD_X_MIN = -1200
+WORLD_Y_MIN = -600
 WORLD_X_MAX = 1200 #canvas_x
 WORLD_Y_MAX = 600  #canvas_y
 
@@ -49,7 +49,6 @@ def main():
     print(foods)
 
     for i in range(0,NUM_SPECIES):
-        #newSpecie = Specie(startingPopulation=STARTING_POPULATION,typeName="species" + str(i))
         newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i, frama_time=FRAME_TIME, world_space=world_space)
         species.append(newSpecie)
 
@@ -86,22 +85,20 @@ def logic(species, foods):
     for squad in Squad.squadLst:
         squad.update()
 
-def draw(world_space, screen_location, gui, species, foods):
-    gui.clear()
-    gui.place_window(screen_location[0], screen_location[1], screen_location[2], screen_location[3])
-    gui.draw_world_borders(world_space)
-
+def draw_foods(gui,foods):
     for food in foods.foodsList:
         if(food.alive):
             gui.add_object_to_draw(food)
         else:
             foods.remove(food)
 
+def draw_critters(gui, species):
     for specie in species:
         for individual in specie.individuals:
             if(individual.alive):
                 gui.add_object_to_draw(individual)
 
+def draw_squads(gui):
     for squad in Squad.squadLst:
         center = squad.center()
         class Obj:
@@ -117,6 +114,15 @@ def draw(world_space, screen_location, gui, species, foods):
             obj.target = m.location
             gui.debug_overlay(obj)
         gui.add_object_to_draw(squad)
+
+def draw(world_space, screen_location, gui, species, foods):
+    gui.clear()
+    gui.place_window(screen_location[0], screen_location[1], screen_location[2], screen_location[3])
+    gui.draw_world_borders(world_space)
+
+    draw_foods(gui,foods)
+    draw_critters(gui,species)
+    draw_squads(gui)
 
     gui.draw()
 

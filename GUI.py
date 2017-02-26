@@ -22,7 +22,7 @@ class GUI(tk.Canvas):
         self.pixel_x_max = self.win_x_size
         self.pixel_y_max = self.win_y_size
 
-        tk.Canvas.__init__(self, master=master, width=WINDOW_X_SIZE, height=WINDOW_Y_SIZE, borderwidth=0, highlightthickness=0, bg="#888888")
+        tk.Canvas.__init__(self, master=master, width=WINDOW_X_SIZE, height=WINDOW_Y_SIZE, borderwidth=0, highlightthickness=0, bg="#cccccc")
         self.pack()
 
     def map_x_coordinate(self, worldX):
@@ -70,18 +70,18 @@ class GUI(tk.Canvas):
             xT = 0
             yT = 0
             for i in range(0, len(object.nearest)):
-                color = '#%02x%02x%02x' % (int(i * 80), int(i * 80), int(i * 80))
+                color = '#%02x%02x%02x' % (int(i * 80), int(0 * 80), int(i * 80))
                 xT = self.map_x_coordinate(object.nearest[i].location[0])
                 yT = self.pixel_y_max - self.map_y_coordinate(object.nearest[i].location[1])
                 self.create_line(x1, y1, xT, yT, width=1, fill=color)
 
         if (x2 != 0 and y2 != 0):
-            self.create_line(x1,y1,x2,y2, width=3, fill=object.color)
+            self.create_line(x1,y1,x2,y2, width=4, fill=object.color)
         else:
-            self.create_line(x1,y1,x2,y2, width=2, fill='#999999')
+            self.create_line(x1,y1,x2,y2, width=2, fill='#aaaaaa')
 
         if(object.heading != 0):
-            self.create_line(x1, y1, x3, y3, width=4, fill='#111111')
+            self.create_line(x1, y1, x3, y3, width=6, fill='#111111')
 
     def is_object_in_draw_space(self,object):
         x = self.map_x_coordinate(object.location[0])
@@ -110,8 +110,8 @@ class GUI(tk.Canvas):
             if (object.needsText):
                 text=(
                     "health: "+str(int(object.health))+
-                    "\nfood: "+str(int(object.foodAmount))+
-                    "\nimperative: "+str(object.mostImperativeIndex)
+                    "\nsize: "+str(int(object.size))+
+                    "\nImperative: "+str(object.mostImperativeIndex)
                 )
                 self.create_text(x, y + 2.5 * r, text=text)
 

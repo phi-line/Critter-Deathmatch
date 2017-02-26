@@ -47,6 +47,7 @@ def update_imperative(individual):
 
     if individual.nearest[0].alive and largeSeparation <= 1 and largeSeparation > 0:
         large = 1.0 - (individual.distance(individual.nearest[0]) / (individual.detectDistance * individual.size))
+        large *= (individual.nearest[0].DPS - individual.DPS)
         large *= largeMod
 
     if individual.nearest[1].alive and foodSeparation <= 1 and foodSeparation > 0:
@@ -57,6 +58,7 @@ def update_imperative(individual):
 
     if individual.nearest[2].alive and smallSeparation <= 1 and smallSeparation > 0:
         small = 1.0 - (individual.distance(individual.nearest[2]) / (individual.detectDistance * individual.size))
+        small *= (individual.DPS - individual.nearest[2].DPS)
         small *= smallMod
 
     if individual.nearest[3].alive and friendSeparation <= 1 and friendSeparation > 0:

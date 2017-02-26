@@ -1,6 +1,5 @@
 import math
 from random import randint
-import Food
 
 class Critter:
     def __init__(self, *args,**kwargs):
@@ -51,7 +50,7 @@ class Critter:
         self.world_y_max = kwargs.pop('world_y_max',600)
 
         self.needsText = True
-        self.drawNearestLines = False
+        self.drawNearestLines = True
 
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
@@ -206,7 +205,7 @@ class Critter:
         self.update_color()
 
     def apply_damage(self, other):
-        self.DPS = int(self.health*self.hunt_scalar*10)
+        self.DPS = int(self.hunt_scalar*10)
         #other.DPS = int(other.health*other.hunt_scalar*10)
 
         #self.health -= float(other.DPS)*self.frame_time

@@ -54,17 +54,16 @@ class Squad:
             center = squad.center()
             #print(individual.name)
             #print(center, " ", individual.typeName, " ", squad.members[0].typeName)
-            dist = Squad.distanceWithCoord(center[0], center[1],
-                                           individual.location[0], individual.location[1])
-            if(dist <= Squad.JOIN_DISTANCE and
-               individual.typeName == squad.members[0].typeName):
-                if(not joined):
-                    squad.addMember(individual)
-                    joined = True
-                    joinedSquad = squad
-                elif(len(squad.members) < Squad.MAX_SIZE):
-                    Squad.leave(joinedSquad, individual)
-                    squad.addMember(individual)
+            dist = Squad.distanceWithCoord(center[0], center[1],individual.location[0], individual.location[1])
+            if(len(squad.members)>0):
+                if(dist <= Squad.JOIN_DISTANCE and individual.typeName == squad.members[0].typeName):
+                    if(not joined):
+                        squad.addMember(individual)
+                        joined = True
+                        joinedSquad = squad
+                    elif(len(squad.members) < Squad.MAX_SIZE):
+                        Squad.leave(joinedSquad, individual)
+                        squad.addMember(individual)
 
 
         if(not joined):
@@ -131,7 +130,7 @@ class Squad:
         if(individual in self.members):
             # remove and update squadLst
             self.members.remove(individual)
-        self.update()
+        #self.update()
         Squad.squadLst.append(self)
 
     def update(self):
