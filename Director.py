@@ -15,7 +15,7 @@ NUM_SPECIES = 10
 STARTING_POPULATION = 1
 
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 10
+FOOD_DENSITY = 75
 FOOD_STRENGTH = 200
 
 FRAME_TIME = 0.02
@@ -75,8 +75,8 @@ def logic(species, foods):
                 individual.move()
                 individual.check_state(species,foods)
                 Squad.join(individual)
-                #if individual.needs_update:
-                #   individualsToUpdate.append(individual)
+            else:
+                specie.individuals.remove(individual)
 
     for specie in species:
         for individual in specie.individuals:

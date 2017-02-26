@@ -76,12 +76,12 @@ class GUI(tk.Canvas):
                 self.create_line(x1, y1, xT, yT, width=1, fill=color)
 
         if (x2 != 0 and y2 != 0):
-            self.create_line(x1,y1,x2,y2, width=2, fill=object.color)
+            self.create_line(x1,y1,x2,y2, width=3, fill=object.color)
         else:
             self.create_line(x1,y1,x2,y2, width=2, fill='#999999')
 
         if(object.heading != 0):
-            self.create_line(x1, y1, x3, y3, width=3, fill='#111111')
+            self.create_line(x1, y1, x3, y3, width=4, fill='#111111')
 
     def is_object_in_draw_space(self,object):
         x = self.map_x_coordinate(object.location[0])
@@ -109,7 +109,7 @@ class GUI(tk.Canvas):
             self.create_circle(x,y,r,c,outline='#000000',width=2)
             if (object.needsText):
                 text=(
-                    "health: "+str(object.health)+
+                    "health: "+str(int(object.health))+
                     "\nfood: "+str(int(object.foodAmount))+
                     "\nimperative: "+str(object.mostImperativeIndex)
                 )

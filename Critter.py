@@ -40,6 +40,8 @@ class Critter:
         self.newLocation = [0,0]
         self.prevHeading = 0
         self.target = [0,0]
+        self.startingHealth = ((2 * self.birthFoodAmount) / self.scaleModifier)
+        self.startingColor = self.color
 
         self.frame_time = kwargs.pop('frame_time', 0.02)
 
@@ -49,7 +51,7 @@ class Critter:
         self.world_y_max = kwargs.pop('world_y_max',600)
 
         self.needsText = True
-        self.drawNearestLines = True
+        self.drawNearestLines = False
 
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
@@ -92,7 +94,7 @@ class Critter:
             return
         cur = self.distance(self.nearest[0])
         new = self.distance(other)
-        if (new < cur or not self.nearest[0].alive or self.nearest[0] == self):
+        if ((new < cur) or (not self.nearest[0].alive) or (self.nearest[0] == self)):
             self.nearest[0] = other
 
     def compare_near_food(self, other):
@@ -188,7 +190,11 @@ class Critter:
 
         elif(Critter.is_collided(self.location, food.location,self.size, food.size) and food.alive and (food != self)):
             self.needs_update = True
-            self.foodAmount += food.consume()
+            foodToConsume = food.consume()
+            self.foodAmount += foodToConsume
+            self.health += ((2 * foodToConsume) / self.scaleModifier)
+            if self.health > self.startingHealth:
+                self.health = self.startingHealth
 
         elif (Critter.is_collided(self.location, small.location,self.size, small.size) and self.typeName != small.typeName and self.alive and small.alive):
             self.apply_damage(small)
@@ -197,6 +203,8 @@ class Critter:
             if (self.size > friend.size):
                 x = 0#self.apply_damage(friend)
 
+        self.update_color()
+
     def apply_damage(self, other):
         self.DPS = int(self.health*self.hunt_scalar*10)
         #other.DPS = int(other.health*other.hunt_scalar*10)
@@ -204,16 +212,13 @@ class Critter:
         #self.health -= float(other.DPS)*self.frame_time
         other.health -= float(self.DPS)*self.frame_time
 
-        #self.update_color()
-        other.update_color()
         #print(other.name,':\t',other.DPS,'\t', other.health,'\t',self.name,':\t',self.DPS,'\t', self.health)
         # print ("\n")
 
     def update_color(self):
-        startingHealth = ((2*self.birthFoodAmount)/self.scaleModifier)
-        colorMod = (self.health/startingHealth)
+        colorMod = (self.health/self.startingHealth)
 
-        rgb = self.hex_to_rgb(self.color)
+        rgb = self.hex_to_rgb(self.startingColor)
         rgb = list(rgb)
         for i in range(0, len(rgb)):
             rgb[i] *= colorMod

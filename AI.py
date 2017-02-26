@@ -14,15 +14,15 @@ def update_nearest(individual, species, foods):
         individual.compare_near_food(food)
 
     for specie in species:
-        for individual in specie.individuals:
-            if individual.alive:
-                if (individual.typeName == individual.typeName and individual.name != individual.name):
-                    individual.compare_near_friend(individual)
+        for other in specie.individuals:
+            if other.alive:
+                if (individual.typeName == other.typeName and individual.name != other.name):
+                    individual.compare_near_friend(other)
                 else:
-                    if individual.size < individual.size:
-                        individual.compare_near_small(individual)
+                    if (individual.size < other.size):
+                        individual.compare_near_small(other)
                     else:
-                        individual.compare_near_large(individual)
+                        individual.compare_near_large(other)
 
 def update_imperative(individual):
     if individual.size <= 0:
