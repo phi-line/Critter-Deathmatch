@@ -10,7 +10,7 @@ def update_nearest(individual, species, foods):
     if individual.nearest_empty:
         individual.init_nearest(species, foods)
 
-    for food in foods.foodLst:
+    for food in foods.foodsList:
         individual.compare_near_food(food)
 
     for specie in species:
@@ -63,7 +63,7 @@ def update_imperative(individual):
         friend = 1.0 - (individual.distance(individual.nearest[3]) / (individual.detectDistance * individual.size))
         friend *= friendMod
 
-    # print('name: ',individual.typeName,',',individual.name,'\t',large,'\t',food,'\t',small,'\t',friend)
+    #print('name: ',individual.typeName,',',individual.name,'\t',large,'\t',food,'\t',small,'\t',friend)
 
     # find the largest value from above
     if (large > 0 and large > food and large > small and large > friend):
@@ -87,6 +87,11 @@ def update_imperative(individual):
 
         if not individual.nearest[individual.mostImperativeIndex].alive:
             individual.mostImperativeIndex = 1
+
+        #individual.mostImperativeIndex = 0
+        if(individual.mostImperativeIndex == 0):
+            print('name: ', individual.typeName, ',', individual.name, '\t', large, '\t', food, '\t', small, '\t',
+                  friend)
 
         individual.target = individual.nearest[individual.mostImperativeIndex].location
     else:
@@ -192,7 +197,7 @@ def point_at_small(individual):
 
 
 def point_with_friend(individual):
-    # print('point_with_friend')
+    #print('point_with_friend')
     x = int(individual.nearest[3].location[0] - individual.location[0])
     y = -1 * int(individual.nearest[3].location[1] - individual.location[1])
 
@@ -218,7 +223,7 @@ def point_with_friend(individual):
     # print(targetTheta)
     # print('frame end\n')
 
-    individual.heading = targetTheta  # individual.heading - targetTheta/randint(36,72)
+    individual.heading = individual.heading - targetTheta/randint(36,72)
 
 
 def point_heading(individual):
@@ -233,4 +238,4 @@ def point_heading(individual):
     else:
         # print('critter[',individual.name,'] has no target')
         individual.target = individual.location
-        individual.heading += (randint(0, 30) - 15)
+        individual.heading += (randint(0, 10) - 5)

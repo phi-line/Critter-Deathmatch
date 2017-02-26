@@ -5,9 +5,8 @@ from math import *
 class Specie:
     SPEED_MIN, SPEED_MAX = 0.1, 1.0
     SIZE_MIN, SIZE_MAX = 1, 5
-    FOOD_MIN, FOOD_MAX = 0.1, 1
-    TURN_SPEED_MIN, TURN_SPEED_MAX = 30, 45
-    DETECT_MIN, DETECT_MAX = 1, 5
+    FOOD_MIN, FOOD_MAX = 0.1, 0.3
+    DETECT_MIN, DETECT_MAX = 2, 5
     SCALAR_MIN, SCALAR_MAX = 0.5, 1.5
 
     def __init__(self, *args, **kwargs):
@@ -81,8 +80,8 @@ class Specie:
         :return: void
         '''
         for i in range(0, self.startingPopulation):
-            this_critter = Critter( location=[randint(50,1150),randint(50,550)],
-                                   heading=0,
+            this_critter = Critter( location=[randint(self.world_space[0],self.world_space[2]),randint(self.world_space[1],self.world_space[3])],
+                                    heading=0,
                                     name=i,
                                     foodAmount=1500,
                                     typeName=self.typeName,

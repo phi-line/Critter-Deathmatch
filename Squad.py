@@ -82,12 +82,12 @@ class Squad:
             # Delete empty squad
             if(len(squad.members) == 0):
                 Squad.squadLst.remove(squad)
-        else:
+        #else:
             # TODO: debug this error
-            print("leaving squad error")
-            print(squad.members)
-            print(individual)
-            print("\n")
+            #print("leaving squad error")
+            #print(squad.members)
+            #print(individual)
+            #print("\n")
 
     @staticmethod
     def checkMemberInSquad(squad, individual):

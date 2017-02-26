@@ -62,8 +62,8 @@ class Critter:
         self.nearest.append(self)
         self.nearest.append(self)
 
-        if(len(foods.foodLst) != 0):
-            self.nearest[1] = foods.foodLst[0]
+        if(len(foods.foodsList) != 0):
+            self.nearest[1] = foods.foodsList[0]
 
         spacesFilled = 1
 
@@ -87,36 +87,36 @@ class Critter:
     def compare_near_large(self,other):
         cur = self.distance(self.nearest[0])
         new = self.distance(other)
-        if (new < cur or not self.nearest[0].alive or self.nearest[0].name == self.name):
+        if (new < cur or not self.nearest[0].alive or self.nearest[0] == self):
             self.nearest[0] = other
 
     def compare_near_food(self, other):
         cur = self.distance(self.nearest[1])
         new = self.distance(other)
-        if (new < cur or not self.nearest[1].alive or self.nearest[1].name == self.name):
+        if (new < cur or not self.nearest[1].alive or self.nearest[1] == self):
             #print('new target: ', other.name,' dist: ', new)
             self.nearest[1] = other
 
     def compare_near_small(self, other):
         cur = self.distance(self.nearest[2])
         new = self.distance(other)
-        if (new < cur or not self.nearest[2].alive or self.nearest[2].name == self.name):
+        if (new < cur or not self.nearest[2].alive or self.nearest[2] == self):
             self.nearest[2] = other
 
     def compare_near_friend(self, other):
         cur = self.distance(self.nearest[3])
         new = self.distance(other)
-        if (new < cur or not self.nearest[3].alive or self.nearest[3].name == self.name):
+        if (new < cur or not self.nearest[3].alive or self.nearest[3] == self):
             self.nearest[3] = other
 
     def move(self):
-        if self.location[0] + self.size > self.world_x_max*0.95:
+        if self.location[0] + self.size > self.world_x_max:
             self.heading = randint(110, 250)
-        elif self.location[0] - self.size < self.world_x_min*0.95:
+        elif self.location[0] - self.size < self.world_x_min:
             self.heading = randint(110, 250) + 180
-        elif self.location[1] + self.size > self.world_y_max*0.95:
+        elif self.location[1] + self.size > self.world_y_max:
             self.heading = randint(20, 160)
-        elif self.location[1] - self.size < self.world_y_min*0.95:
+        elif self.location[1] - self.size < self.world_y_min:
             self.heading = randint(200, 340)
 
         antiHeading = (self.heading + 180) % 360
@@ -190,26 +190,30 @@ class Critter:
             if (self.size > small.size):
                 self.apply_damage(small)
 
-        elif (Critter.is_collided(self.location, friend.location,self.size, friend.size) and self.typeName != friend.typeName and self.alive and friend.alive):
+        elif (Critter.is_collided(self.location, friend.location,self.size, friend.size) and self.typeName == friend.typeName and self.alive and friend.alive):
             if (self.size > friend.size):
-                self.apply_damage(friend)
+                x = 0#self.apply_damage(friend)
 
     def apply_damage(self, other):
         self.DPS = int(self.health*self.hunt_scalar*10)
         other.DPS = int(other.health*other.hunt_scalar*10)
-        # print(other.DPS, self.health)
+
         self.health -= float(other.DPS)*self.frame_time
         other.health -= float(self.DPS)*self.frame_time
+
         self.update_color()
         other.update_color()
-        # print(other.DPS, self.health)
+        print(other.name,':\t',other.DPS,'\t', other.health,'\t',self.name,':\t',self.DPS,'\t', self.health)
         # print ("\n")
 
     def update_color(self):
+        startingHealth = ((2*self.birthFoodAmount)/self.scaleModifier)
+        colorMod = (self.health/startingHealth)
+
         rgb = self.hex_to_rgb(self.color)
         rgb = list(rgb)
         for i in range(0, len(rgb)):
-            rgb[i] *= (self.health/int((2*self.birthFoodAmount)/self.scaleModifier))
+            rgb[i] *= colorMod
             rgb[i] = int(rgb[i])
             if rgb[i] >= 255:
                 rgb[i] = 255

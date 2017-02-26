@@ -26,23 +26,25 @@ class GUI(tk.Canvas):
         self.pack()
 
     def map_x_coordinate(self, worldX):
-        x = 0
+        xMin = self.display_x_min
+        xMax = self.display_x_max
         if(worldX < self.display_x_min):
             x = -1
         elif(worldX > self.display_x_max):
             x = self.display_x_max + 1
         else:
-            x = ((self.display_x_min + worldX)/self.display_x_max)*self.pixel_x_max
+            x = ((worldX - xMin) / (xMax - xMin)) * self.pixel_x_max
         return int(x)
 
     def map_y_coordinate(self, worldY):
-        y = 0
+        yMin = self.display_y_min
+        yMax = self.display_y_max
         if (worldY < self.display_y_min):
             y = -1
         elif (worldY > self.display_y_max):
             y = self.display_y_max + 1
         else:
-            y = ((self.display_y_min + worldY) / self.display_y_max) * self.pixel_y_max
+            y = ((worldY - yMin) / (yMax - yMin)) * self.pixel_y_max
         return int(y)
 
     def place_window(self, display_x_min, display_y_min, display_x_max, display_y_max,):
@@ -97,11 +99,11 @@ class GUI(tk.Canvas):
             self.debug_overlay(object)
             self.create_circle(x,y,r,c,outline='#000000',width=2)
 
-    def draw_world_borders(self):
-        x1 = self.pixel_x_min
-        y1 = self.pixel_y_min
-        x2 = self.pixel_x_max
-        y2 = self.pixel_y_max
+    def draw_world_borders(self,worldSpace):
+        x1 = self.map_x_coordinate(worldSpace[0])
+        y1 = self.pixel_y_max - self.map_y_coordinate(worldSpace[1])
+        x2 = self.map_x_coordinate(worldSpace[2])
+        y2 = self.pixel_y_max - self.map_y_coordinate(worldSpace[3])
 
         self.create_line(x1, y1, x2, y1, width=10, fill='#000000')
         self.create_line(x2, y1, x2, y2, width=10, fill='#000000')
@@ -109,7 +111,6 @@ class GUI(tk.Canvas):
         self.create_line(x1, y2, x1, y1, width=10, fill='#000000')
 
     def draw(self):
-        self.draw_world_borders()
         tk.Canvas.update_idletasks(self)
         tk.Canvas.update(self)
 

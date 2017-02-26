@@ -13,55 +13,54 @@ from Squad import Squad
 
 NUM_SPECIES = 2
 STARTING_POPULATION = 1
-FRAME_TIME = 0.02
-WORLD_X_SIZE = 1200 #canvas_x
-WORLD_Y_SIZE = 600  #canvas_y
-WINDOW_X_SIZE = 1200
-WINDOW_Y_SIZE = 600
+
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 1
+FOOD_DENSITY = 10
 FOOD_STRENGTH = 200
 
-display_x_min = 0
-display_y_min = 0
-display_x_max = WORLD_X_SIZE
-display_y_max = WORLD_Y_SIZE
+FRAME_TIME = 0.02
+
+WINDOW_X_SIZE = 1200
+WINDOW_Y_SIZE = 600
+
+WORLD_X_MIN = 0
+WORLD_Y_MIN = 0
+WORLD_X_MAX = 600 #canvas_x
+WORLD_Y_MAX = 300  #canvas_y
+
+display_x_min = WORLD_X_MIN-600
+display_y_min = WORLD_Y_MIN-300
+display_x_max = WORLD_X_MAX*2
+display_y_max = WORLD_Y_MAX*2
 
 def main():
     seed()
 
+    world_space = [WORLD_X_MIN,WORLD_Y_MIN,WORLD_X_MAX,WORLD_Y_MAX]
     screen_location = [display_x_min,display_y_min,display_x_max,display_y_max]
 
     gui = GUI(tk.Tk(),WINDOW_X_SIZE,WINDOW_Y_SIZE)
     gui.place_window(screen_location[0],screen_location[1],screen_location[2],screen_location[3])
 
+    foods = FoodLst(world_space,FOOD_STRENGTH,FOOD_DENSITY)
+
     species = []
-    foods = create_foods()
+    #foods = foodListHolder.foodsList
     print(foods)
 
     for i in range(0,NUM_SPECIES):
         #newSpecie = Specie(startingPopulation=STARTING_POPULATION,typeName="species" + str(i))
-        newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i, frama_time=FRAME_TIME)
+        newSpecie = Specie(startingPopulation=STARTING_POPULATION, typeName=i, frama_time=FRAME_TIME, world_space=world_space)
         species.append(newSpecie)
 
-    main_loop(screen_location,gui,species,foods)
+    main_loop(world_space,screen_location,gui,species,foods)
 
-def create_foods():
-    #numFood = int(WORLD_Y_SIZE * WORLD_X_SIZE * FOOD_DENSITY)
-    numFood = FOOD_DENSITY
-    foods = FoodLst(FOOD_STRENGTH)
-    for i in range(0,numFood):
-        x = randint(50,WORLD_X_SIZE-50)
-        y = randint(50,WORLD_Y_SIZE-50)
-        newFood = Food(FOOD_STRENGTH,i,[x,y])
-        foods.add(newFood)
-        #foods.append(newFood)
-    return foods
 
-def main_loop(screen_location, gui,species,foods):
+
+def main_loop(world_space,screen_location, gui,species,foods):
     while True:
         logic(species,foods)
-        draw(screen_location,gui,species,foods)
+        draw(world_space,screen_location,gui,species,foods)
         time.sleep(FRAME_TIME)
 
 def logic(species, foods):
@@ -86,11 +85,12 @@ def logic(species, foods):
     for squad in Squad.squadLst:
         squad.update()
 
-def draw(screen_location, gui, species, foods):
+def draw(world_space, screen_location, gui, species, foods):
     gui.clear()
     gui.place_window(screen_location[0], screen_location[1], screen_location[2], screen_location[3])
+    gui.draw_world_borders(world_space)
 
-    for food in foods.foodLst:
+    for food in foods.foodsList:
         if(food.alive):
             gui.add_object_to_draw(food)
         else:
