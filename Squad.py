@@ -16,6 +16,8 @@ class Squad:
         self.color = Squad.gen_hex_colour_code()
         self.heading = 0
 
+        self.needsText = False
+
     @staticmethod
     def gen_hex_colour_code():
         return "#" + ''.join([random.choice('0123456789ABCDEF') for x in range(6)])

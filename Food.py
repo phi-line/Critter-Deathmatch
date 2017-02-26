@@ -54,7 +54,8 @@ class Food:
 
         self.target = location  #ignore DEBUG only
         self.heading = 0        #ignore DEBUG only
-        self.nearest = []
+        self.nearest = []       #ignore DEBUG only
+        self.needsText = False
 
     def consume(self):
         self.alive = False

@@ -98,6 +98,12 @@ class GUI(tk.Canvas):
         if(self.is_object_in_draw_space(object)):
             self.debug_overlay(object)
             self.create_circle(x,y,r,c,outline='#000000',width=2)
+            if (object.needsText):
+                text=(
+                    "health: "+str(object.health)+
+                    "\nfood: "+str(int(object.foodAmount))
+                )
+                self.create_text(x, y + 2 * r, text=text)
 
     def draw_world_borders(self,worldSpace):
         x1 = self.map_x_coordinate(worldSpace[0])

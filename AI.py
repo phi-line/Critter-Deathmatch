@@ -89,9 +89,8 @@ def update_imperative(individual):
             individual.mostImperativeIndex = 1
 
         #individual.mostImperativeIndex = 0
-        if(individual.mostImperativeIndex == 0):
-            print('name: ', individual.typeName, ',', individual.name, '\t', large, '\t', food, '\t', small, '\t',
-                  friend)
+        #if(individual.mostImperativeIndex == 0):
+            #print('name: ', individual.typeName, ',', individual.name, '\t', large, '\t', food, '\t', small, '\t', friend)
 
         individual.target = individual.nearest[individual.mostImperativeIndex].location
     else:

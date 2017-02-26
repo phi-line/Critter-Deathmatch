@@ -15,7 +15,7 @@ NUM_SPECIES = 2
 STARTING_POPULATION = 1
 
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 10
+FOOD_DENSITY = 50
 FOOD_STRENGTH = 200
 
 FRAME_TIME = 0.02
@@ -25,13 +25,13 @@ WINDOW_Y_SIZE = 600
 
 WORLD_X_MIN = 0
 WORLD_Y_MIN = 0
-WORLD_X_MAX = 600 #canvas_x
-WORLD_Y_MAX = 300  #canvas_y
+WORLD_X_MAX = 1200 #canvas_x
+WORLD_Y_MAX = 600  #canvas_y
 
-display_x_min = WORLD_X_MIN-600
-display_y_min = WORLD_Y_MIN-300
-display_x_max = WORLD_X_MAX*2
-display_y_max = WORLD_Y_MAX*2
+display_x_min = WORLD_X_MIN
+display_y_min = WORLD_Y_MIN
+display_x_max = WORLD_X_MAX
+display_y_max = WORLD_Y_MAX
 
 def main():
     seed()
@@ -58,7 +58,8 @@ def main():
 
 
 def main_loop(world_space,screen_location, gui,species,foods):
-    while True:
+    x = 0
+    while x == 0:
         logic(species,foods)
         draw(world_space,screen_location,gui,species,foods)
         time.sleep(FRAME_TIME)
@@ -110,6 +111,7 @@ def draw(world_space, screen_location, gui, species, foods):
         obj.color = '#999999'
         obj.location = center
         obj.size = 5
+        obj.needsText = False
         for m in squad.members:
             obj.target = m.location
             gui.debug_overlay(obj)

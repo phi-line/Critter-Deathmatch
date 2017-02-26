@@ -48,6 +48,8 @@ class Critter:
         self.world_x_max = kwargs.pop('world_x_max',1200)
         self.world_y_max = kwargs.pop('world_y_max',600)
 
+        self.needsText = True
+
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
         dist = math.sqrt(distSquared)
