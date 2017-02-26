@@ -11,11 +11,11 @@ from Food import Food
 from Food import FoodLst
 from Squad import Squad
 
-NUM_SPECIES = 2
+NUM_SPECIES = 10
 STARTING_POPULATION = 1
 
 #FOOD_DENSITY = 0.000075
-FOOD_DENSITY = 50
+FOOD_DENSITY = 10
 FOOD_STRENGTH = 200
 
 FRAME_TIME = 0.02
@@ -112,6 +112,7 @@ def draw(world_space, screen_location, gui, species, foods):
         obj.location = center
         obj.size = 5
         obj.needsText = False
+        obj.drawNearestLines = False
         for m in squad.members:
             obj.target = m.location
             gui.debug_overlay(obj)

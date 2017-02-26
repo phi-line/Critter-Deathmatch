@@ -49,6 +49,7 @@ class Critter:
         self.world_y_max = kwargs.pop('world_y_max',600)
 
         self.needsText = True
+        self.drawNearestLines = True
 
     def distance(self, other):
         distSquared = (other.location[0] - self.location[0]) ** 2 + (other.location[1] - self.location[1]) ** 2
@@ -87,6 +88,8 @@ class Critter:
 
 
     def compare_near_large(self,other):
+        if(len(self.nearest) == 0):
+            return
         cur = self.distance(self.nearest[0])
         new = self.distance(other)
         if (new < cur or not self.nearest[0].alive or self.nearest[0] == self):
@@ -181,16 +184,14 @@ class Critter:
         friend = self.nearest[3]
 
         if (Critter.is_collided(self.location, large.location,self.size, large.size) and self.typeName != large.typeName and self.alive and large.alive):
-            if (self.size > large.size):
-                self.apply_damage(large)
+            self.apply_damage(large)
 
         elif(Critter.is_collided(self.location, food.location,self.size, food.size) and food.alive and (food != self)):
             self.needs_update = True
             self.foodAmount += food.consume()
 
         elif (Critter.is_collided(self.location, small.location,self.size, small.size) and self.typeName != small.typeName and self.alive and small.alive):
-            if (self.size > small.size):
-                self.apply_damage(small)
+            self.apply_damage(small)
 
         elif (Critter.is_collided(self.location, friend.location,self.size, friend.size) and self.typeName == friend.typeName and self.alive and friend.alive):
             if (self.size > friend.size):
@@ -198,14 +199,14 @@ class Critter:
 
     def apply_damage(self, other):
         self.DPS = int(self.health*self.hunt_scalar*10)
-        other.DPS = int(other.health*other.hunt_scalar*10)
+        #other.DPS = int(other.health*other.hunt_scalar*10)
 
-        self.health -= float(other.DPS)*self.frame_time
+        #self.health -= float(other.DPS)*self.frame_time
         other.health -= float(self.DPS)*self.frame_time
 
-        self.update_color()
+        #self.update_color()
         other.update_color()
-        print(other.name,':\t',other.DPS,'\t', other.health,'\t',self.name,':\t',self.DPS,'\t', self.health)
+        #print(other.name,':\t',other.DPS,'\t', other.health,'\t',self.name,':\t',self.DPS,'\t', self.health)
         # print ("\n")
 
     def update_color(self):

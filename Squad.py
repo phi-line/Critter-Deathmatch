@@ -17,6 +17,7 @@ class Squad:
         self.heading = 0
 
         self.needsText = False
+        self.drawNearestLines = False
 
     @staticmethod
     def gen_hex_colour_code():
@@ -156,6 +157,7 @@ class Squad:
         for member in self.members:
             x += member.location[0]
             y += member.location[1]
-        x /= len(self.members)
-        y /= len(self.members)
+        if len(self.members) != 0:
+            x /= len(self.members)
+            y /= len(self.members)
         return [x, y]

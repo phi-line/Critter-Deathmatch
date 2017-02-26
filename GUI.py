@@ -66,6 +66,15 @@ class GUI(tk.Canvas):
         x3 = int(x1 + 1.5*object.size*math.cos(theta))
         y3 = int(y1 + 1.5*object.size*math.sin(theta))
 
+        if (object.drawNearestLines):
+            xT = 0
+            yT = 0
+            for i in range(0, len(object.nearest)):
+                color = '#%02x%02x%02x' % (int(i * 80), int(i * 80), int(i * 80))
+                xT = self.map_x_coordinate(object.nearest[i].location[0])
+                yT = self.pixel_y_max - self.map_y_coordinate(object.nearest[i].location[1])
+                self.create_line(x1, y1, xT, yT, width=1, fill=color)
+
         if (x2 != 0 and y2 != 0):
             self.create_line(x1,y1,x2,y2, width=2, fill=object.color)
         else:
@@ -101,9 +110,10 @@ class GUI(tk.Canvas):
             if (object.needsText):
                 text=(
                     "health: "+str(object.health)+
-                    "\nfood: "+str(int(object.foodAmount))
+                    "\nfood: "+str(int(object.foodAmount))+
+                    "\nimperative: "+str(object.mostImperativeIndex)
                 )
-                self.create_text(x, y + 2 * r, text=text)
+                self.create_text(x, y + 2.5 * r, text=text)
 
     def draw_world_borders(self,worldSpace):
         x1 = self.map_x_coordinate(worldSpace[0])

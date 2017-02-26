@@ -19,10 +19,10 @@ def update_nearest(individual, species, foods):
                 if (individual.typeName == individual.typeName and individual.name != individual.name):
                     individual.compare_near_friend(individual)
                 else:
-                    if individual.size > individual.size:
-                        individual.compare_near_large(individual)
-                    elif individual.size < individual.size:
+                    if individual.size < individual.size:
                         individual.compare_near_small(individual)
+                    else:
+                        individual.compare_near_large(individual)
 
 def update_imperative(individual):
     if individual.size <= 0:
@@ -79,14 +79,14 @@ def update_imperative(individual):
 
     if (individual.mostImperativeIndex >= 0):
         if individual.nearest[individual.mostImperativeIndex].size == individual.size:
-            individual.mostImperativeIndex = 1
+            individual.mostImperativeIndex = 2
 
         if individual.nearest[individual.mostImperativeIndex].typeName == individual.typeName:
             if individual.nearest[individual.mostImperativeIndex].name != individual.name:
                 individual.mostImperativeIndex = 3
 
         if not individual.nearest[individual.mostImperativeIndex].alive:
-            individual.mostImperativeIndex = 1
+            individual.mostImperativeIndex = -2
 
         #individual.mostImperativeIndex = 0
         #if(individual.mostImperativeIndex == 0):
@@ -164,9 +164,6 @@ def point_at_food(individual):
 
 def point_at_small(individual):
     # print('point_at_small')
-    if individual.size > individual.nearest[2].size:
-        point_at_food(individual)
-        return
     x = int(individual.nearest[2].location[0] - individual.location[0])
     y = -1 * int(individual.nearest[2].location[1] - individual.location[1])
 
@@ -224,6 +221,11 @@ def point_with_friend(individual):
 
     individual.heading = individual.heading - targetTheta/randint(36,72)
 
+def do_nothing(individual):
+    # print('critter[',individual.name,'] has no target')
+    individual.target = individual.location
+    individual.heading += (randint(0, 10) - 5)
+
 
 def point_heading(individual):
     if individual.mostImperativeIndex == 0:
@@ -235,6 +237,4 @@ def point_heading(individual):
     elif individual.mostImperativeIndex == 3:
         point_with_friend(individual)
     else:
-        # print('critter[',individual.name,'] has no target')
-        individual.target = individual.location
-        individual.heading += (randint(0, 10) - 5)
+        do_nothing(individual)
